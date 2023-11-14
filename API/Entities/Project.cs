@@ -4,13 +4,14 @@ namespace API.Entities;
 
 public class Project : BaseEntity
 {
+    public int Id { get; set; }
     [MaxLength(60)] 
     public string Name { get; set; }
 
     public int CreatedById { get; set; }
     public virtual User CreatedBy { get; set; }
 
-    public ICollection<ProjectMember> Members { get; set; }
+    public ICollection<Member> Members { get; set; }
 
     public ICollection<Bug> Bugs { get; set; }
 }
