@@ -1,6 +1,6 @@
 namespace API.Entities;
 
-public class ProjectNote : BaseEntity
+public class Note : BaseEntity
 {
     public int Id { get; set; }
     public string Body { get; set; }

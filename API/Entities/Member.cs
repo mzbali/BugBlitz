@@ -1,7 +1,9 @@
 namespace API.Entities;
 
-public class ProjectMember : BaseEntity
+public class Member
 {
+    public int Id { get; set; }
+    
     public int ProjectId { get; set; }
     public virtual Project Project { get; set; }
 
