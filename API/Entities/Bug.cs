@@ -8,13 +8,13 @@ public class Bug
     public string Title { get; set; }
 
     public string Description { get; set; }
-    public string Priority { get; set; }
+    public Priority Priority { get; set; } = Priority.Low;
 
     public int ProjectId { get; set; }
     public virtual Project Project { get; set; }
 
-    public ICollection<ProjectNote> Notes { get; set; }
-    public bool IsResolved { get; set; }
+    public ICollection<Note> Notes { get; set; }
+    public bool IsResolved { get; set; } = false;
 
     public int? ClosedById { get; set; }
     public virtual User ClosedBy { get; set; }
@@ -29,7 +29,7 @@ public class Bug
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
-    public int? LastUpdatedById { get; set; }
-    public virtual User LastUpdatedBy { get; set; }
-    public DateTime? LastUpdatedAt { get; set; }
+    public int? UpdatedById { get; set; }
+    public virtual User UpdatedBy { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }
