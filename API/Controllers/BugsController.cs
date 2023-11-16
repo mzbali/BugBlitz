@@ -39,6 +39,7 @@ public class BugsController : BaseController
         .Include(b => b.UpdatedBy)
         .Include(b => b.ClosedBy)
         .Include(b => b.ReopenedBy)
+        .Include(b=>b.Notes)
         .FirstOrDefaultAsync(b => b.Id == bugId && b.ProjectId == projectId);
 
         if (bug is null) return NotFound("Bug not found.");
