@@ -1,8 +1,10 @@
 using API.DTOs;
 using API.Entities;
 using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 
 [ApiController]
@@ -74,5 +76,19 @@ public class AccountController: ControllerBase
             Name = user.UserName,
             Token = await _tokenService.GenerateTokenAsync(user)
         };
+    }
+    
+    [Authorize]
+    [HttpGet("GetAllAccounts")]
+    public async Task<ActionResult<List<string>>> GetAllAccount()
+    {
+        var user = await _userManager.Users.Select(u=>u.UserName).ToListAsync();
+
+        if (user.Count <= 0)
+        {
+            return NotFound("No users found");
+        }
+
+        return Ok(user);
     }
 }
