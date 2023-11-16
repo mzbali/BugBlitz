@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
-public class BaseController:ControllerBase
+[Authorize]
+public class BaseController: ControllerBase
 {
         
 }
