@@ -1,11 +1,7 @@
-using API.Entities;
-
 namespace API.DTOs;
 
-public record BugDto
+public record BugDto: BugInputDto
 {
-    public string Title { get; init; }
-    public string Description { get; init; }
-    public Priority Priority { get; init; }
-}
+    public string Id { get; init; }
 
+}
