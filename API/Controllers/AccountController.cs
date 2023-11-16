@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
+[ApiController]
 [Route("api/[controller]")]
-public class AccountController:BaseController
+public class AccountController: ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly TokenService _tokenService;
