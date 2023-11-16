@@ -81,7 +81,7 @@ public static class DbInitializer
                 new Note { Body = "ProjectNote 9", Author = admin, Bug = bugs[1] }
             };
             
-            // If the member is a member of the Project the Bug attached to, then add it to the notes.
+            /* If the member is a member of the Project the insect attached to, then add it to the notes.*/
             foreach (var note in notes)
             {
                 if (members.Any(m => m.User == note.Author && m.Project == note.Bug.Project))
