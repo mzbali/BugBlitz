@@ -9,15 +9,15 @@ public static class DbInitializer
     {
         if (!userManager.Users.Any())
         {
-            var user1 = new User { UserName = "bob", Email = "bob@test.com" };
+            var user1 = new User { UserName = "bob", FullName = "Bob Odendrik",Email = "bob@test.com" };
             await userManager.CreateAsync(user1, "Pa$$w0rd");
             await userManager.AddToRoleAsync(user1, "Member");
                 
-            var user2 = new User { UserName = "rifa", Email = "rifa@test.com" };
+            var user2 = new User { UserName = "rifa", FullName ="Rifa Zaman" ,Email = "rifa@test.com" };
             await userManager.CreateAsync(user2, "Pa$$w0rd");
             await userManager.AddToRoleAsync(user2, "Member");
 
-            var admin = new User { UserName = "admin", Email = "admin@test.com" };
+            var admin = new User { UserName = "admin",FullName = "Admin Admin",Email = "admin@test.com" };
             await userManager.CreateAsync(admin, "Pa$$w0rd");
             await userManager.AddToRoleAsync(admin, "Admin");
 
@@ -80,9 +80,8 @@ public static class DbInitializer
                 new Note { Body = "ProjectNote 8", Author = admin, Bug = bugs[0] },
                 new Note { Body = "ProjectNote 9", Author = admin, Bug = bugs[1] }
             };
-                
-            // If the member is a member of the Project the Bug attached to then add it to the notes.
-                
+            
+            // If the member is a member of the Project the Bug attached to, then add it to the notes.
             foreach (var note in notes)
             {
                 if (members.Any(m => m.User == note.Author && m.Project == note.Bug.Project))
@@ -90,11 +89,7 @@ public static class DbInitializer
                     context.Notes.Add(note);
                 }
             }
-
-            await context.SaveChangesAsync();
-                
-            context.Notes.AddRange(notes);
-
+             
             await context.SaveChangesAsync();
         }
     }
