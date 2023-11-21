@@ -15,7 +15,7 @@
         "format": "prettier -w .",
         "format:check": "prettier -c .",
         "postbuild": "next-sitemap --config next-sitemap.config.js",
-        "prepare": "husky install"
+        "prepare": "cd .. && husky install client/.husky"
     },
     "dependencies": {
         "@headlessui/react": "^1.7.17",
@@ -39,6 +39,7 @@
         "@typescript-eslint/eslint-plugin": "^6.11.0",
         "@typescript-eslint/parser": "^6.11.0",
         "autoprefixer": "^10.4.16",
+        "commitlint": "^18.4.3",
         "eslint": "^8.53.0",
         "eslint-config-next": "^14.0.3",
         "eslint-config-prettier": "^9.0.0",
