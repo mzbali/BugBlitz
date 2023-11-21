@@ -35,6 +35,10 @@
 *.swo
 *~
 
+# include in git for API
+!global.json
+!dotnet-tools.json
+
 # client gitignore list
 
 # dependencies
@@ -77,3 +81,8 @@
 **/robots.txt
 **/sitemap.xml
 **/sitemap-*.xml
+
+# include in git for client
+!tsconfig.json
+!package.json
+!vercel.json
