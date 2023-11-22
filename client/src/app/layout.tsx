@@ -3,6 +3,8 @@ import React from 'react';
 
 import '@/styles/globals.css';
 
+import NavBar from '@/components/NavBar';
+
 import { siteConfig } from '@/constant/config';
 
 // Metadata is used for SEO
@@ -52,8 +54,9 @@ export default function RootLayout({
   return (
     <html>
       <head />
-      <body className='bg-slate-100 dark:bg-slate-900 scrollbar-hide'>
-        {children}
+      <body className='bg-slate-200 dark:bg-slate-900 scrollbar-hide'>
+        <NavBar />
+        <main className='shadow-2xl mx-auto w-full lg:w-[90%]'>{children}</main>
       </body>
     </html>
   );
