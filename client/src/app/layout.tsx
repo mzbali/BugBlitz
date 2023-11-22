@@ -3,6 +3,7 @@ import React from 'react';
 
 import '@/styles/globals.css';
 
+import Container from '@/components/Container';
 import NavBar from '@/components/NavBar';
 
 import { siteConfig } from '@/constant/config';
@@ -56,7 +57,7 @@ export default function RootLayout({
       <head />
       <body className='bg-slate-200 dark:bg-slate-900 scrollbar-hide'>
         <NavBar />
-        <main className='shadow-2xl mx-auto w-full lg:w-[90%]'>{children}</main>
+        <Container>{children}</Container>
       </body>
     </html>
   );
