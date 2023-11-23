@@ -15,26 +15,24 @@ const LoginPage = () => {
   };
 
   return (
-    <section>
-      <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
+    <div className='flex h-1/6 w-full flex-col items-center px-6 py-8 lg:py-0'>
+      <Card>
         <Logo />
-        <Card>
-          <h1 className='text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white'>
-            {isSignUp ? 'Sign Up' : 'Sign in to your account'}
-          </h1>
-          {isSignUp ? <SignUpForm /> : <SignInForm />}
-          <TextButton
-            onClick={toggleForm}
-            variant='basic'
-            className='dark:text-gray-400 hover:dark:text-gray-300'
-          >
-            {isSignUp
-              ? 'Already have an account? Sign In'
-              : "Don't have an account? Sign Up"}
-          </TextButton>
-        </Card>
-      </div>
-    </section>
+        <h1 className='text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+          {isSignUp ? 'Sign Up' : 'Sign in to your account'}
+        </h1>
+        {isSignUp ? <SignUpForm /> : <SignInForm />}
+        <TextButton
+          onClick={toggleForm}
+          variant='basic'
+          className='dark:text-gray-400 hover:dark:text-gray-300'
+        >
+          {isSignUp
+            ? 'Already have an account? Sign In'
+            : "Don't have an account? Sign Up"}
+        </TextButton>
+      </Card>
+    </div>
   );
 };
 
