@@ -5,10 +5,8 @@ interface Props {
 }
 const Container = ({ children }: Props) => {
   return (
-    <main className='shadow-2xl mx-auto w-full lg:w-[90%]'>
-      <section className='layout flex min-h-screen flex-col items-center justify-center text-center text-black dark:text-slate-100'>
-        {children}
-      </section>
+    <main className='mx-auto flex min-h-screen flex-col items-center justify-center text-black shadow-2xl dark:text-slate-100 sm:px-8 md:w-[90%]'>
+      {children}
     </main>
   );
 };

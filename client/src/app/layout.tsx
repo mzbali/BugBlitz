@@ -55,7 +55,7 @@ export default function RootLayout({
   return (
     <html>
       <head />
-      <body className='bg-slate-200 dark:bg-slate-900 scrollbar-hide'>
+      <body className='bg-slate-200 dark:bg-slate-900'>
         <NavBar />
         <Container>{children}</Container>
       </body>
