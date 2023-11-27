@@ -21,7 +21,7 @@
 
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <ItemGroup>
-        <_CustomFiles Include="..\commit-messasge" />
+        <_CustomFiles Include="..\commit-message" />
     </ItemGroup>
     <Copy SourceFiles="@(_CustomFiles)" DestinationFolder="./../.git/hooks" />
 </Target>
