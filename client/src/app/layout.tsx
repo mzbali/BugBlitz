@@ -3,6 +3,7 @@ import React from 'react';
 
 import '@/styles/globals.css';
 
+import AuthProvider from '@/components/auth/AuthProvider';
 import Container from '@/components/Container';
 import NavBar from '@/components/NavBar';
 
@@ -53,12 +54,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
-      <head />
-      <body className='bg-slate-200 dark:bg-slate-900'>
-        <NavBar />
-        <Container>{children}</Container>
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang='en'>
+        <head />
+        <body className='bg-slate-200 dark:bg-slate-900'>
+          <NavBar />
+          <Container>{children}</Container>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
