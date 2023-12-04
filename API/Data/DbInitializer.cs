@@ -1,25 +1,18 @@
 using API.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace API.Data;
 
 public static class DbInitializer
 {
-    public static async Task InitializeAsync(AppDbContext context, UserManager<User> userManager)
+    public static async Task InitializeAsync(AppDbContext context)
     {
-        if (!userManager.Users.Any())
+        if (!context.Users.Any())
         {
-            var user1 = new User { UserName = "bob", FullName = "Bob Odendrik",Email = "bob@test.com" };
-            await userManager.CreateAsync(user1, "Pa$$w0rd");
-            await userManager.AddToRoleAsync(user1, "Member");
-                
-            var user2 = new User { UserName = "rifa", FullName ="Rifa Zaman" ,Email = "rifa@test.com" };
-            await userManager.CreateAsync(user2, "Pa$$w0rd");
-            await userManager.AddToRoleAsync(user2, "Member");
+            var user1 = new User { Username = "bob", Fullname = "Bob Odendrik", Email = "bob@test.com" };
 
-            var admin = new User { UserName = "admin",FullName = "Admin Admin",Email = "admin@test.com" };
-            await userManager.CreateAsync(admin, "Pa$$w0rd");
-            await userManager.AddToRoleAsync(admin, "Admin");
+            var user2 = new User { Username = "rifa", Fullname = "Rifa Zaman", Email = "rifa@test.com" };
+
+            var admin = new User { Username = "admin", Fullname = "Admin Admin", Email = "admin@test.com" };
 
             // Add initial projects
             var projects = new List<Project>
@@ -80,7 +73,7 @@ public static class DbInitializer
                 new Note { Body = "ProjectNote 8", Author = admin, Bug = bugs[0] },
                 new Note { Body = "ProjectNote 9", Author = admin, Bug = bugs[1] }
             };
-            
+
             /* If the member is a member of the Project the insect attached to, then add it to the notes.*/
             foreach (var note in notes)
             {
@@ -89,7 +82,7 @@ public static class DbInitializer
                     context.Notes.Add(note);
                 }
             }
-             
+
             await context.SaveChangesAsync();
         }
     }
