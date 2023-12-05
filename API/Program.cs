@@ -1,10 +1,7 @@
-using System.Text;
 using API.Data;
-using API.Entities;
+using API.Middlewares;
 using API.RequestHelpers;
-using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -45,25 +42,28 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors();
 
-builder.Services.AddIdentityCore<User>(opt => { opt.User.RequireUniqueEmail = true; })
-.AddRoles<Role>()
-.AddEntityFrameworkStores<AppDbContext>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(x =>
 {
-    opt.TokenValidationParameters = new TokenValidationParameters
+    x.RequireHttpsMetadata = Convert.ToBoolean(builder.Configuration["Keycloak:RequireHttpsMetadata"]);
+    x.MetadataAddress = builder.Configuration["Keycloak:MetadataAddress"]!;
+    x.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey =
-        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:SecurityKey"]!))
+        ValidAudience = builder.Configuration["Keycloak:Audience"],
+        ValidateIssuer = Convert.ToBoolean(builder.Configuration["Keycloak:Validate-Issuer"]),
+        NameClaimType = "preferred_username"
     };
-}
-);
+    x.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"Authentication Failed: {context.Exception}");
+            return Task.CompletedTask;
+        }
+    };
+});
+
 builder.Services.AddAuthorization();
-builder.Services.AddScoped<TokenService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); // connectionString of postgres database
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -74,13 +74,12 @@ var app = builder.Build();
 
 using var scope = app.Services.CreateScope(); // get rid of of it after
 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>(); // get the DB connection
-var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>(); // log any error to the console, since no access to eror exception page
 
 try
 {
-    context.Database.Migrate(); // migrate any migration
-    await DbInitializer.InitializeAsync(context, userManager); // populate with dummy data
+    context.Database.Migrate(); // myigrate any migration
+    await DbInitializer.InitializeAsync(context); // populate with dummy data
 }
 catch (Exception ex)
 {
@@ -94,16 +93,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseRouting();
 
 app.UseCors(opt =>
 {
-    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+    opt.AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowCredentials()
+       .WithOrigins("http://localhost:3000", "https://identity.portfolio.mzbali.com");
 });
 
 app.UseAuthentication();
+
+app.UseMiddleware<LogUserNameMiddleware>();
+
+app.UseMiddleware<EnsureUserExistsMiddleware>();
 
 app.UseAuthorization();
 
