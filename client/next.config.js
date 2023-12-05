@@ -1,3 +1,9 @@
+if (process.env.NODE_ENV === 'development') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+} else {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
