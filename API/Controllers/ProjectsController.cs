@@ -2,7 +2,6 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using Mapster;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,18 +11,16 @@ namespace API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<User> _userManager;
 
-        public ProjectsController(AppDbContext context, UserManager<User> userManager)
+        public ProjectsController(AppDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         [HttpGet(Name = "GetProjects")]
         public async Task<ActionResult<List<ProjectDto>>> GetProjects()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
             if (user is null)
             {
                 return NotFound("User not found.");
@@ -34,7 +31,7 @@ namespace API.Controllers
                 .Include(p => p.Bugs)
                 .Include(p => p.Members)
                 .ThenInclude(member => member.User)
-                .Where(p => p.Members.Any(m => m.User.UserName == User.Identity.Name) || p.CreatedById == user.Id)
+                .Where(p => p.Members.Any(m => m.User.Username == User.Identity.Name) || p.CreatedById == user.Id)
                 .ToListAsync();
 
             if (projects == null!) return NotFound("Project not found.");
@@ -66,7 +63,7 @@ namespace API.Controllers
         public async Task<ActionResult<ProjectDto>> CreateProject([FromBody] ProjectInputDto projectCreateDto)
         {
             // Check if the user exists
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
 
             if (user is null)
             {
@@ -89,14 +86,14 @@ namespace API.Controllers
             };
 
             // Fetch all users in the member list at once
-            var usernames = projectCreateDto.Members.Distinct();
-            var members = await _userManager.Users.Where(u => usernames.Contains(u.UserName)).ToListAsync();
+            var Usernames = projectCreateDto.Members.Distinct();
+            var members = await _context.Users.Where(u => Usernames.Contains(u.Username)).ToListAsync();
 
             // Add other members to the project (avoid duplicates)
             foreach (var member in members)
             {
                 // Check if the user is not the creator and is not already a member
-                if (member != user && project.Members.All(m => m.User.UserName != member.UserName))
+                if (member != user && project.Members.All(m => m.User.Username != member.Username))
                 {
                     project.Members.Add(new Member { Project = project, User = member, JoinedAt = DateTime.UtcNow });
                 }
@@ -124,7 +121,7 @@ namespace API.Controllers
         public async Task<ActionResult<ProjectDto>> UpdateProject(int projectId, [FromBody] ProjectInputDto projectUpdateDto)
         {
             // Check if the user exists
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
 
             if (user is null)
             {
@@ -157,12 +154,12 @@ namespace API.Controllers
             if (projectUpdateDto.Members.Count != 0)
             {
                 // Fetch all users in the member list at once
-                var usernames = projectUpdateDto.Members.Distinct();
-                var members = await _userManager.Users.Where(u => usernames.Contains(u.UserName)).ToListAsync();
+                var Usernames = projectUpdateDto.Members.Distinct();
+                var members = await _context.Users.Where(u => Usernames.Contains(u.Username)).ToListAsync();
 
                 // Remove existing members not in the updated list
                 var membersToRemove = project.Members
-                .Where(m => members.All(member => member.UserName != m.User.UserName))
+                .Where(m => members.All(member => member.Username != m.User.Username))
                 .ToList();
 
                 membersToRemove.ForEach(m => project.Members.Remove(m));
@@ -171,7 +168,7 @@ namespace API.Controllers
                 foreach (var member in members)
                 {
                     // Check if the user is not the creator and is not already a member
-                    if (member != user && project.Members.All(m => m.User.UserName != member.UserName))
+                    if (member != user && project.Members.All(m => m.User.Username != member.Username))
                     {
                         project.Members.Add(new Member { Project = project, User = member, JoinedAt = DateTime.UtcNow });
                     }
@@ -199,7 +196,7 @@ namespace API.Controllers
         [HttpDelete("{projectId}")]
         public async Task<ActionResult> DeleteProject(int projectId)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
 
             var project = await _context.Projects
             .Include(p => p.CreatedBy)

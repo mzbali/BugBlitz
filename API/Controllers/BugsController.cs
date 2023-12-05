@@ -2,7 +2,6 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using Mapster;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,18 +11,16 @@ namespace API.Controllers;
 public class BugsController : BaseController
 {
     private readonly AppDbContext _context;
-    private readonly UserManager<User> _userManager;
 
-    public BugsController(AppDbContext context, UserManager<User> userManager)
+    public BugsController(AppDbContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     [HttpGet("{bugId}", Name = "GetBug")]
     public async Task<ActionResult<BugDetailsDto>> GetBugDetails(int projectId, int bugId)
     {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         var project = await _context.Projects
         .Include(project => project.CreatedBy)
         .Include(p => p.Members)
@@ -31,7 +28,7 @@ public class BugsController : BaseController
 
         if (project is null) return NotFound("Project not found,");
 
-        if (project.CreatedBy.UserName != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id) )
+        if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Access is denied. Not a member of the project.");
 
         var bug = await _context.Bugs
@@ -39,7 +36,7 @@ public class BugsController : BaseController
         .Include(b => b.UpdatedBy)
         .Include(b => b.ClosedBy)
         .Include(b => b.ReopenedBy)
-        .Include(b=>b.Notes)
+        .Include(b => b.Notes)
         .FirstOrDefaultAsync(b => b.Id == bugId && b.ProjectId == projectId);
 
         if (bug is null) return NotFound("Bug not found.");
@@ -50,15 +47,15 @@ public class BugsController : BaseController
     [HttpPost]
     public async Task<ActionResult<BugDetailsDto>> CreateBug(int projectId, BugInputDto bugInputDto)
     {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         var project = await _context.Projects
-        .Include(p=>p.CreatedBy)
+        .Include(p => p.CreatedBy)
         .Include(p => p.Members)
         .FirstOrDefaultAsync(p => p.Id == projectId);
 
         if (project is null) return NotFound();
 
-        if (project.CreatedBy.UserName != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id) )
+        if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Access is denied. Not a member of the project.");
 
         var newBug = new Bug
@@ -81,7 +78,7 @@ public class BugsController : BaseController
     [HttpDelete("{bugId}")]
     public async Task<ActionResult> DeleteBug(int projectId, int bugId)
     {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         var project = await _context.Projects
         .Include(project => project.CreatedBy)
         .Include(p => p.Members)
@@ -89,7 +86,7 @@ public class BugsController : BaseController
 
         if (project is null) return NotFound();
 
-        if (project.CreatedBy.UserName != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id) )
+        if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Can't delete. Not a member of the project.");
 
         var bug = await _context.Bugs
@@ -111,7 +108,7 @@ public class BugsController : BaseController
     [HttpPut("{bugId}")]
     public async Task<ActionResult<BugDto>> UpdateBug(int projectId, int bugId, [FromBody] BugInputDto bugInputDto)
     {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         var project = await _context.Projects
         .Include(project => project.CreatedBy)
         .Include(p => p.Members)
@@ -119,7 +116,7 @@ public class BugsController : BaseController
 
         if (project is null) return NotFound();
 
-        if (project.CreatedBy.UserName != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id) )
+        if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Access is denied. Not a member of the project.");
 
         var bug = await _context.Bugs
@@ -159,7 +156,7 @@ public class BugsController : BaseController
     [HttpPatch("{bugId}/close")]
     public async Task<ActionResult> CloseBug(int projectId, int bugId)
     {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         var project = await _context.Projects
         .Include(project => project.CreatedBy)
         .Include(p => p.Members)
@@ -167,7 +164,7 @@ public class BugsController : BaseController
 
         if (project is null) return NotFound();
 
-        if (project.CreatedBy.UserName != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id) )
+        if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Can't close the bug. Not a member of the project.");
 
         var bug = await _context.Bugs
@@ -196,7 +193,7 @@ public class BugsController : BaseController
     [HttpPatch("{bugId}/reopen")]
     public async Task<ActionResult> ReopenBug(int projectId, int bugId)
     {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         var project = await _context.Projects
         .Include(project => project.CreatedBy)
         .Include(p => p.Members)
@@ -204,7 +201,7 @@ public class BugsController : BaseController
 
         if (project is null) return NotFound();
 
-        if (project.CreatedBy.UserName != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id) )
+        if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Access is denied.");
 
         var bug = await _context.Bugs

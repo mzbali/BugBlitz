@@ -16,53 +16,53 @@ public class NotesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNote(int projectId, int bugId,[FromBody] string body)
+    public async Task<IActionResult> CreateNote(int projectId, int bugId, [FromBody] string body)
     {
         if (string.IsNullOrWhiteSpace(body))
             return BadRequest("body is empty");
-        
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         if (user is null) return NotFound("Could not find the user.");
-        
+
         var bug = await _context.Bugs.FindAsync(bugId);
         if (bug is null) return NotFound("Could not find the bug.");
 
-        var note = new Note { Author = user, Body = body.Trim(), Bug = bug};
+        var note = new Note { Author = user, Body = body.Trim(), Bug = bug };
 
         _context.Notes.Add(note);
 
         var result = await _context.SaveChangesAsync() > 0;
-        
-        if(result) return CreatedAtAction(nameof(CreateNote), new { noteId = note.Id ,bugId = bugId, projectId = projectId, });
-        
+
+        if (result) return CreatedAtAction(nameof(CreateNote), new { noteId = note.Id, bugId = bugId, projectId = projectId, });
+
         return BadRequest(new ProblemDetails
         {
             Title = "Problem creating note."
         });
 
     }
-    
+
     [HttpPut("{noteId}")]
     public async Task<IActionResult> UpdateNote(int bugId, int noteId, [FromBody] string body)
     {
         if (string.IsNullOrWhiteSpace(body))
             return BadRequest("Note body is empty");
-        
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
         if (user is null) return NotFound("Could not find the user.");
-        
+
         var bug = await _context.Bugs.FindAsync(bugId);
         if (bug is null) return NotFound("Could not find the bug.");
 
         var note = await _context.Notes.FindAsync(noteId);
         if (note is null) return NotFound("Could not find the note.");
-        
+
         note.Body = body;
 
         var result = await _context.SaveChangesAsync() > 0;
 
         if (result) return Ok(note);
-        
+
         return BadRequest(new ProblemDetails
         {
             Title = "Problem updating note."
