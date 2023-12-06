@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 TypeAdapterConfig.Configure();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -78,7 +78,7 @@ var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>(); // lo
 
 try
 {
-    context.Database.Migrate(); // myigrate any migration
+    context.Database.Migrate(); // migrate any migration
     await DbInitializer.InitializeAsync(context); // populate with dummy data
 }
 catch (Exception ex)
@@ -107,9 +107,7 @@ app.UseCors(opt =>
 
 app.UseAuthentication();
 
-app.UseMiddleware<LogUserNameMiddleware>();
-
-app.UseMiddleware<EnsureUserExistsMiddleware>();
+app.UseMiddleware<UserEnsurerMiddleware>();
 
 app.UseAuthorization();
 
