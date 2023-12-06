@@ -23,7 +23,7 @@ public class TokenService
         // Claims about the user
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.UserName),
+            //new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Email, user.Email),
         };
 
