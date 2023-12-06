@@ -1,3 +1,4 @@
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import { type JWT } from 'next-auth/jwt';
 import { type OAuthConfig } from 'next-auth/providers';
@@ -32,6 +33,40 @@ export const authOptions: NextAuthOptions = {
         token.id_token = account.id_token;
         token.provider = account.provider;
         token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+      }
+      // Check if the token is expired
+      const decodedToken = jwt.decode(
+        token.accessToken as string,
+      ) as JwtPayload;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp && decodedToken.exp < currentTime) {
+        // Token is expired, refresh it
+        const response = await fetch(
+          `${process.env.KEYCLOAK_URL}/realms/myrealm/protocol/openid-connect/token`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              client_id: process.env.KEYCLOAK_ID as string,
+              client_secret: process.env.KEYCLOAK_SECRET as string,
+              grant_type: 'refresh_token' as string,
+              refresh_token: token.refreshToken as string,
+            }),
+          },
+        );
+        if (response.ok) {
+          const refreshedTokens = await response.json();
+          token.accessToken = refreshedTokens.access_token;
+          token.refreshToken = refreshedTokens.refresh_token;
+          console.log('Token refreshed successfully');
+        } else {
+          console.error(`HTTP error! status: ${response.status}`);
+          token.refreshToken = undefined;
+          // redirect to login page if refresh token is invalid using next/router
+        }
       }
       return token;
     },
@@ -39,6 +74,7 @@ export const authOptions: NextAuthOptions = {
       if (session) {
         session = Object.assign({}, session, {
           accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
         });
       }
       return session;
