@@ -5,8 +5,8 @@ interface ICard {
 }
 
 const Card = ({ children }: ICard) => (
-  <div className='w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 overflow-auto'>
-    <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>{children}</div>
+  <div className='w-full overflow-auto rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0'>
+    <div className='space-y-4 p-6 sm:p-8 md:space-y-6'>{children}</div>
   </div>
 );
 

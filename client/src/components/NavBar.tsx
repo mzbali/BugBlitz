@@ -8,18 +8,18 @@ import BB from '~/svg/BB.svg';
 
 const NavBar = () => {
   return (
-    <nav className='bg-white dark:bg-slate-800 border-gray-200 dark:border-gray-700 fixed w-full z-20 top-0 start-0'>
-      <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
+    <nav className='fixed start-0 top-0 z-20 w-full border-gray-200 bg-white dark:border-gray-700 dark:bg-slate-800'>
+      <div className='mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4'>
         <Link
           href='/'
           className='flex items-center space-x-3 rtl:space-x-reverse'
         >
           <BB className='h-8' />
-          <span className='self-center text-2xl font-semibold whitespace-nowrap dark:text-white'>
+          <span className='self-center whitespace-nowrap text-2xl font-semibold dark:text-white'>
             BugBlitz
           </span>
         </Link>
-        <div className='flex justify-center items-center'>
+        <div className='flex items-center justify-center'>
           <MenuButton />
           <ThemeToggle />
         </div>

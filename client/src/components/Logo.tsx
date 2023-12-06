@@ -5,9 +5,9 @@ import BB from '~/svg/BB.svg';
 const Logo = () => (
   <a
     href='#'
-    className='flex items-center justify-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white'
+    className='mb-6 flex items-center justify-center text-2xl font-semibold text-gray-900 dark:text-white'
   >
-    <BB className='w-8 h-8 mr-2 ' />
+    <BB className='mr-2 h-8 w-8 ' />
     BugBlitz
   </a>
 );
