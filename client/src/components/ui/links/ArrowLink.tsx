@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import cn from '@/lib/cn';
+import { cn } from '@/lib/utils';
 
 import UnderlineLink from '@/components/ui/links/UnderlineLink';
 import { UnstyledLinkProps } from '@/components/ui/links/UnstyledLink';
