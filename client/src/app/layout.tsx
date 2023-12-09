@@ -4,7 +4,6 @@ import React from 'react';
 import '@/styles/globals.css';
 
 import AuthProvider from '@/components/auth/AuthProvider';
-import Container from '@/components/Container';
 import NavBar from '@/components/NavBar';
 
 import { siteConfig } from '@/constant/config';
@@ -59,7 +58,7 @@ export default function RootLayout({
         <head />
         <body className='bg-slate-200 dark:bg-slate-900'>
           <NavBar />
-          <Container>{children}</Container>
+          {children}
         </body>
       </html>
     </AuthProvider>
