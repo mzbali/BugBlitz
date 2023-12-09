@@ -6,14 +6,17 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import { CogIcon, LogOutIcon } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import React from 'react';
 
+import { getInitials } from '@/lib/utils';
+
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+
 import TextButton from './ui/buttons/TextButton';
 const MenuButton = () => {
-  const { status } = useSession();
+  const { status, data } = useSession();
 
   if (status === 'loading') {
     return <>...</>;
@@ -23,13 +26,11 @@ const MenuButton = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Image
-            className='rounded-full'
-            src='/images/me.jpeg'
-            alt='user photo'
-            width={32}
-            height={32}
-          />
+          <Avatar>
+            <AvatarFallback>
+              {getInitials(data.user?.name || '')}
+            </AvatarFallback>
+          </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className='w-32 rounded-md bg-white p-2 shadow-lg dark:bg-slate-800 dark:text-white'>
           <DropdownMenuItem className='rounded-md p-2 hover:bg-indigo-300 dark:hover:text-black'>
