@@ -11,11 +11,9 @@ public static class TypeAdapterConfig
     public static void Configure()
     {
         TypeAdapterConfig<User, MemberDto>.NewConfig()
-        .Map(dest => dest.Id, src => src.Id)
         .Map(dest => dest.Username, src => src.Username);
 
         TypeAdapterConfig<Member, MemberDto>.NewConfig()
-        .Map(dest => dest.Id, src => src.User.Id)
         .Map(dest=> dest.Username, src => src.User.Username);
 
         TypeAdapterConfig<Project, ProjectDto>.NewConfig()

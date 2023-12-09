@@ -7,4 +7,5 @@ public record ProjectDto
     public MemberDto CreatedBy { get; init; }
     public List<MemberDto> Members { get; init; }
     public ICollection<BugDto> Bugs { get; init; }
+    public DateTime CreatedAt { get; init; }
 }
