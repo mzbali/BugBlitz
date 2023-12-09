@@ -21,6 +21,7 @@ const NavBar = () => {
         </Link>
         <div className='flex items-center justify-center'>
           <MenuButton />
+          <div className='w-2' />
           <ThemeToggle />
         </div>
       </div>
