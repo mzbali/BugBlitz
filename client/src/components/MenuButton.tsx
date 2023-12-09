@@ -25,7 +25,7 @@ const MenuButton = () => {
   if (status === 'authenticated')
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger className='focus:outline-none'>
           <Avatar>
             <AvatarFallback>
               {getInitials(data.user?.name || '')}
