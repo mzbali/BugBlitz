@@ -34,6 +34,7 @@ export type Project = {
 
 export const columns: ColumnDef<Project>[] = [
   {
+    id: 'name',
     accessorKey: 'name',
     header: 'Name',
   },
