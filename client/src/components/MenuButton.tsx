@@ -7,8 +7,9 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { CogIcon, LogOutIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { getInitials } from '@/lib/utils';
 
@@ -17,6 +18,15 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import TextButton from './ui/buttons/TextButton';
 const MenuButton = () => {
   const { status, data } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      console.log('No JWT');
+      console.log(status);
+      void signIn('keycloak');
+    }
+  }, [status, router]);
 
   if (status === 'loading') {
     return <>...</>;
