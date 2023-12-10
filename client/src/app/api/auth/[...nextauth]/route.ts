@@ -65,7 +65,6 @@ export const authOptions: NextAuthOptions = {
         } else {
           console.error(`HTTP error! status: ${response.status}`);
           token.refreshToken = undefined;
-          // redirect to login page if refresh token is invalid using next/router
         }
       }
       return token;
