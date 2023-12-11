@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import React from 'react';
 
 import Container from '@/components/Container';
+import CreateProject from '@/components/CreateProject';
 import {
   Card,
   CardDescription,
@@ -36,7 +37,11 @@ const Page = async () => {
           </div>
         </CardHeader>
       </Card>
-      <DataTable columns={columns} data={data} />
+      <DataTable
+        columns={columns}
+        data={data}
+        createComponent={<CreateProject />}
+      />
     </Container>
   );
 };

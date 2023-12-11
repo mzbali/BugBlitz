@@ -25,11 +25,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  createComponent: React.ReactNode;
 }
 
 export function DataTable<TData extends object, TValue>({
   columns,
   data,
+  createComponent,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -97,21 +99,24 @@ export function DataTable<TData extends object, TValue>({
   );
 
   return (
-    <div className='w-full rounded-lg bg-white text-center shadow dark:bg-slate-800'>
-      <div className='flex items-center justify-between p-4'>
-        <Input
-          placeholder='Search...'
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
-          }
-          className='max-w-sm'
-        />
+    <>
+      <div className='w-full rounded-lg bg-white text-center shadow dark:bg-slate-800'>
+        <div className='flex items-center justify-between p-4'>
+          <Input
+            placeholder='Search...'
+            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+            onChange={(event) =>
+              table.getColumn('name')?.setFilterValue(event.target.value)
+            }
+            className='max-w-sm'
+          />
+          {createComponent}
+        </div>
+        <Table>
+          {renderTableHeader()}
+          {renderTableBody()}
+        </Table>
       </div>
-      <Table>
-        {renderTableHeader()}
-        {renderTableBody()}
-      </Table>
-    </div>
+    </>
   );
 }
