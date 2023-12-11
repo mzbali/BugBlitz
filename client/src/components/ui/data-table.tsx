@@ -108,7 +108,7 @@ export function DataTable<TData extends object, TValue>({
             onChange={(event) =>
               table.getColumn('name')?.setFilterValue(event.target.value)
             }
-            className='max-w-sm'
+            className='max-w-sm dark:border-gray-700'
           />
           {createComponent}
         </div>
