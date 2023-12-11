@@ -74,7 +74,7 @@ export const columns: ColumnDef<Project>[] = [
             <IconButton
               variant='ghost'
               icon={MoreHorizontal}
-              className='h-8 w-8 p-0'
+              className='h-8 w-8 p-0 dark:text-white dark:hover:bg-slate-700'
             >
               <span className='sr-only'>Open menu</span>
             </IconButton>
