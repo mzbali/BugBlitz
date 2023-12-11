@@ -37,7 +37,7 @@ const MenuButton = () => {
       <DropdownMenu>
         <DropdownMenuTrigger className='focus:outline-none'>
           <Avatar>
-            <AvatarFallback className='text-gray-300 dark:bg-slate-500'>
+            <AvatarFallback className='dark:bg-slate-500 dark:text-gray-300'>
               {getInitials(data.user?.name || '')}
             </AvatarFallback>
           </Avatar>

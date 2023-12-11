@@ -34,7 +34,7 @@ const CreateProject = () => {
       <DialogTrigger asChild>
         <Button variant='primary'>Create Project</Button>
       </DialogTrigger>
-      <DialogContent className='dark:border-gray-800 sm:max-w-[425px]'>
+      <DialogContent className='dark:border-none dark:bg-slate-700 sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle className='dark:text-white'>
             Create a new project
@@ -45,11 +45,11 @@ const CreateProject = () => {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleCreateProject}>
-          <div className='grid gap-4 py-4'>
-            <div className='grid grid-cols-4 items-center gap-4'>
+          <div className='grid gap-4 py-2'>
+            <div className='flex flex-col items-center justify-center'>
               <Label
                 htmlFor='name'
-                className='whitespace-nowrap text-right dark:text-white'
+                className='mb-3 self-start whitespace-nowrap text-right dark:text-white'
               >
                 Project Name
               </Label>
@@ -57,7 +57,7 @@ const CreateProject = () => {
                 id='name'
                 value={projectName}
                 onChange={handleChange}
-                className='col-span-3'
+                className='dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
               />
             </div>
           </div>
