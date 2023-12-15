@@ -8,11 +8,11 @@ public static class DbInitializer
     {
         if (!context.Users.Any())
         {
-            var user1 = new User { Username = "bob", Fullname = "Bob Odendrik", Email = "bob@test.com" };
+            var user1 = new User { Username = "bob", FullName = "Bob Odendrik", Email = "bob@test.com" };
 
-            var user2 = new User { Username = "rifa", Fullname = "Rifa Zaman", Email = "rifa@test.com" };
+            var user2 = new User { Username = "rifa", FullName = "Rifa Zaman", Email = "rifa@test.com" };
 
-            var admin = new User { Username = "admin", Fullname = "Admin Admin", Email = "admin@test.com" };
+            var admin = new User { Username = "admin", FullName = "Admin Admin", Email = "admin@test.com" };
 
             // Add initial projects
             var projects = new List<Project>
