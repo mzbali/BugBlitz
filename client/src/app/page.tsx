@@ -33,7 +33,9 @@ const HomePage = async () => {
       <ButtonLink className='mt-6' href='/components' variant='light'>
         See all components
       </ButtonLink>
-
+      <ButtonLink className='mt-2' href='/projects' variant='primary'>
+        See all Projects
+      </ButtonLink>
       <footer className='absolute bottom-2 text-gray-700'>
         © {new Date().getFullYear()} By{' '}
         <UnderlineLink href='https://mzbali.com'>Mahmud Bali</UnderlineLink>
