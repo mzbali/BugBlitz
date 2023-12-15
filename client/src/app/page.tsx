@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 import React from 'react';
 
 import Container from '@/components/Container';
@@ -5,9 +7,16 @@ import ArrowLink from '@/components/ui/links/ArrowLink';
 import ButtonLink from '@/components/ui/links/ButtonLink';
 import UnderlineLink from '@/components/ui/links/UnderlineLink';
 
+import { authOptions } from './api/auth/[...nextauth]/route';
+
 import Logo from '~/svg/BB.svg';
 
-const HomePage = () => {
+const HomePage = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/api/auth/signin');
+  }
   return (
     <Container className='items-center justify-center'>
       <Logo className='w-16' />

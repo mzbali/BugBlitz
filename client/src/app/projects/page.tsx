@@ -1,4 +1,5 @@
 import { ScrollText } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 
@@ -11,18 +12,21 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { columns, Project } from './columns';
+import { getProjects } from '@/app/actions';
+import { Project } from '@/models/types';
+
+import { columns } from './columns';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { DataTable } from '../../components/ui/data-table';
 
 const Page = async () => {
   const session = await getServerSession(authOptions);
-  const res = await fetch('https://localhost:5000/api/Projects', {
-    headers: {
-      Authorization: `Bearer ${session?.accessToken}`,
-    },
-  });
-  const data: Project[] = await res.json();
+
+  if (!session) {
+    redirect('/api/auth/signin');
+  }
+
+  const data: Project[] = await getProjects();
 
   return (
     <Container className='items-center justify-start'>
