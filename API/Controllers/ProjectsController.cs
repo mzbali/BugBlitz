@@ -54,7 +54,7 @@ namespace API.Controllers
                 return NotFound("Project not found.");
             }
 
-            var projectDto = project.Adapt<ProjectDto>();
+            var projectDto = project.Adapt<ProjectDetailsDto>();
 
             return Ok(projectDto);
         }
