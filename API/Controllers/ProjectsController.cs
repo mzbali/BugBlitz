@@ -23,7 +23,7 @@ namespace API.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
             if (user is null)
             {
-                return NotFound("User not found.");
+                return NotFound(new ProblemDetails { Title = "User not found.", Status = 404 });
             }
 
             var projects = await _context.Projects
@@ -67,13 +67,13 @@ namespace API.Controllers
 
             if (user is null)
             {
-                return NotFound("User not found.");
+                return NotFound(new ProblemDetails { Title = "User not found.", Status = 404 });
             }
 
             // Check if members are specified for the project
             if (projectCreateDto.Members.Count == 0)
             {
-                return BadRequest("At least one member must be specified for the project.");
+                return BadRequest(new ProblemDetails { Title = "At least one member must be specified for the project.", Status = 400 });
             }
 
             // Create the project
@@ -86,8 +86,8 @@ namespace API.Controllers
             };
 
             // Fetch all users in the member list at once
-            var Usernames = projectCreateDto.Members.Distinct();
-            var members = await _context.Users.Where(u => Usernames.Contains(u.Username)).ToListAsync();
+            var usernames = projectCreateDto.Members.Distinct();
+            var members = await _context.Users.Where(u => usernames.Contains(u.Username)).ToListAsync();
 
             // Add other members to the project (avoid duplicates)
             foreach (var member in members)
@@ -111,7 +111,8 @@ namespace API.Controllers
 
             return BadRequest(new ProblemDetails
             {
-                Title = "Problem creating Project"
+                Title = "Problem creating Project",
+                Status = 400
             });
 
         }
@@ -125,7 +126,7 @@ namespace API.Controllers
 
             if (user is null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails { Title = "User not found.", Status = 404 });
             }
 
             // Fetch the project to be updated
@@ -137,13 +138,13 @@ namespace API.Controllers
 
             if (project is null)
             {
-                return NotFound("Project not found.");
+                return NotFound(new ProblemDetails { Title = "Project not found.", Status = 404 });
             }
 
             // Check if the user is the creator of the project
             if (project.CreatedById != user.Id)
             {
-                return Unauthorized("Access is denied. Only the creator can update the project.");
+                return Unauthorized(new ProblemDetails { Title = "Access is denied. Only the project creator can update the project.", Status = 401 });
             }
 
             // Update project name if provided
@@ -187,7 +188,8 @@ namespace API.Controllers
 
             return BadRequest(new ProblemDetails
             {
-                Title = "Problem updating project"
+                Title = "Problem updating Project",
+                Status = 400
             });
         }
 
