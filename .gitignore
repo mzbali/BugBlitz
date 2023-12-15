@@ -39,7 +39,10 @@
 !global.json
 !dotnet-tools.json
 
-# client gitignore list
+# Ignore migation files
+**/Migrations/*.cs
+
+# Client gitignore list
 
 # dependencies
 **/node_modules
