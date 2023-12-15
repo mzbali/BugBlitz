@@ -30,7 +30,7 @@ namespace API.Middlewares
                     user = new User
                     {
                         Username = context.User.Identity.Name,
-                        Fullname = context.User.FindFirst(ClaimTypes.Name)?.Value,
+                        FullName = context.User.FindFirst(ClaimTypes.Name)?.Value,
                         Email = context.User.FindFirst(ClaimTypes.Email)?.Value
                     };
 
