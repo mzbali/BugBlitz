@@ -12,25 +12,9 @@ import Link from 'next/link';
 
 import IconButton from '@/components/ui/buttons/IconButton';
 
-export type User = {
-  username: string;
-};
+import { Project } from '@/models/types';
 
-export type Bug = {
-  title: string;
-  description: string;
-  priority: number;
-  id: number;
-};
-
-export type Project = {
-  id: number;
-  name: string;
-  createdBy: User;
-  members: User[];
-  bugs: Bug[];
-  createdAt: string;
-};
+import { deleteProject } from '../actions';
 
 export const columns: ColumnDef<Project>[] = [
   {
@@ -87,7 +71,7 @@ export const columns: ColumnDef<Project>[] = [
               <Link href={`/projects/${project.id}/edit`}>Update</Link>
             </DropdownMenuItem>
             <DropdownMenuItem className='rounded-md p-2 text-left hover:bg-red-300 dark:hover:text-black'>
-              <Link href={`/projects/${project.id}/delete`}>Delete</Link>
+              <button onClick={() => deleteProject(project.id)}>Delete</button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
