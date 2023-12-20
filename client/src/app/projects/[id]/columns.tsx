@@ -3,7 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
-import { cn } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
 import IconButton from '@/components/ui/buttons/IconButton';
@@ -76,14 +76,7 @@ export const columns: ColumnDef<Bug>[] = [
     header: 'Added',
     cell: ({ row }) => {
       const bug = row.original;
-      const date = new Date(bug.createdAt);
-      return `${new Intl.DateTimeFormat('default', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date)} ~ ${bug.createdBy.username}`;
+      return `${formatDate(bug.createdAt)} ~ ${bug.createdBy.username}`;
     },
   },
   {
@@ -92,15 +85,7 @@ export const columns: ColumnDef<Bug>[] = [
     header: 'Updated',
     cell: ({ row }) => {
       const bug = row.original;
-      return bug.updatedAt
-        ? new Intl.DateTimeFormat('default', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          }).format(new Date(bug.updatedAt))
-        : 'n/a';
+      return formatDate(bug.updatedAt);
     },
   },
   {
@@ -126,7 +111,7 @@ export const columns: ColumnDef<Bug>[] = [
               <Link href={`/bugs/${bug.id}`}>View</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <button onClick={() => deleteBug(bug.id, bug.projectId)}>
+              <button onClick={() => deleteBug(bug.projectId, bug.id)}>
                 Delete
               </button>
             </DropdownMenuItem>

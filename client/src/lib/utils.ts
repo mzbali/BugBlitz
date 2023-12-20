@@ -15,3 +15,15 @@ export const getInitials = (name: string) => {
   }
   return initials;
 };
+
+export const formatDate = (updatedAt: string | null): string => {
+  return updatedAt
+    ? new Intl.DateTimeFormat('default', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(updatedAt))
+    : 'n/a';
+};

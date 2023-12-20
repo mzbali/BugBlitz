@@ -4,6 +4,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
+import { formatDate } from '@/lib/utils';
+
 import IconButton from '@/components/ui/buttons/IconButton';
 import {
   DropdownMenu,
@@ -44,16 +46,7 @@ export const columns: ColumnDef<Project>[] = [
     header: 'Admin',
   },
   {
-    accessorFn: (row) => {
-      const date = new Date(row.createdAt);
-      return new Intl.DateTimeFormat('default', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date);
-    },
+    accessorFn: (row) => formatDate(row.createdAt),
     header: 'Added',
   },
   {
