@@ -1,7 +1,7 @@
 'use client';
 import { DialogClose } from '@radix-ui/react-dialog';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 
 import Button from '@/components/ui/buttons/Button';
 import {
@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select';
 
 import { createBug, updateBug } from '@/app/actions';
-import { Bug, BugInputDto } from '@/models/types';
+import { Bug } from '@/models/types';
 
 interface Props {
   bug?: Bug;
@@ -41,7 +41,7 @@ const ModifyBug = ({ bug, projectId }: Props) => {
     },
   });
 
-  const onSubmit = async (data: BugInputDto) => {
+  const onSubmit = async (data: FieldValues) => {
     setLoading(true);
     if (bug) {
       await updateBug(parseInt(projectId), parseInt(bug.id), {
