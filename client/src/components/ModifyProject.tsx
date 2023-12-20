@@ -17,15 +17,20 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-import { createProject } from '@/app/actions';
-import { Member } from '@/models/types';
+import { createProject, updateProject } from '@/app/actions';
+import { Member, Project } from '@/models/types';
 
-const CreateProject = () => {
+interface Props {
+  project?: Project;
+  updateVariant?: boolean;
+}
+
+const ModifyProject = ({ project, updateVariant }: Props) => {
   const [loading, setLoading] = useState(false);
   const methods = useForm({
     defaultValues: {
-      name: '',
-      selectedMembers: [],
+      name: project ? project.name : '',
+      selectedMembers: project ? project.members : [],
     },
   });
 
@@ -34,10 +39,17 @@ const CreateProject = () => {
     selectedMembers: Member[];
   }) => {
     setLoading(true);
-    await createProject({
-      name: data.name,
-      members: data.selectedMembers as Member[],
-    });
+    if (project) {
+      await updateProject(project.id, {
+        name: data.name,
+        members: data.selectedMembers as Member[],
+      });
+    } else {
+      await createProject({
+        name: data.name,
+        members: data.selectedMembers as Member[],
+      });
+    }
     setLoading(false);
     methods.reset(); // Reset the form values
   };
@@ -45,16 +57,20 @@ const CreateProject = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='primary'>Create Project</Button>
+        <Button variant='primary'>
+          {updateVariant ? 'Update Project' : 'Create Project'}
+        </Button>
       </DialogTrigger>
-      <DialogContent className='dark:border-none dark:bg-slate-700 sm:max-w-[425px]'>
+      <DialogContent className='sm:max-w-[425px] dark:border-none dark:bg-slate-700'>
         <DialogHeader>
           <DialogTitle className='dark:text-white'>
             Create a new project
           </DialogTitle>
           <DialogDescription>
-            Fill in the details to create a new project. Click save when you're
-            done.
+            {`Fill in the details to ${
+              updateVariant ? 'create a new ' : 'update'
+            } project. Click save when you're
+            done.`}
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...methods}>
@@ -88,4 +104,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default ModifyProject;
