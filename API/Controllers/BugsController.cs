@@ -58,11 +58,16 @@ public class BugsController : BaseController
         if (project.CreatedBy.Username != User.Identity.Name && !project.Members.Any(member => member.UserId == user.Id))
             return Unauthorized("Access is denied. Not a member of the project.");
 
+        if (!Enum.TryParse<Priority>(bugInputDto.Priority, true, out var priority))
+        {
+            return BadRequest("Invalid priority value.");
+        }
+        
         var newBug = new Bug
         {
             Title = bugInputDto.Title,
             Description = bugInputDto.Description,
-            Priority = bugInputDto.Priority,
+            Priority = priority,
             Project = project,
             CreatedBy = user,
             CreatedAt = DateTime.UtcNow,
@@ -134,8 +139,13 @@ public class BugsController : BaseController
 
         if (!string.IsNullOrEmpty(bugInputDto.Description))
             bug.Description = bugInputDto.Description;
+        
+        if (!Enum.TryParse<Priority>(bugInputDto.Priority, true, out var priority))
+        {
+            return BadRequest("Invalid priority value.");
+        }
 
-        bug.Priority = bugInputDto.Priority;
+        bug.Priority = priority;
 
         // Set the UpdatedBy and UpdatedAt properties
         bug.UpdatedBy = user;
