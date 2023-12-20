@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
+import { signOut } from 'next-auth/react';
 import React from 'react';
 
 import Container from '@/components/Container';
@@ -15,6 +16,7 @@ const HomePage = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
+    await signOut();
     redirect('/api/auth/signin');
   }
   return (
