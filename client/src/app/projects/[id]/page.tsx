@@ -1,9 +1,13 @@
-import { ScrollText } from 'lucide-react';
+import { ChevronUp, Trash, UserRoundPlus } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 
+import { formatDate } from '@/lib/utils';
+
 import Container from '@/components/Container';
 import ModifyBug from '@/components/ModifyBug';
+import ProjectRename from '@/components/ProjectRename';
+import Button from '@/components/ui/buttons/Button';
 import {
   Card,
   CardDescription,
@@ -11,6 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
+import { Separator } from '@/components/ui/separator';
 
 import { getProject } from '@/app/actions';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
@@ -27,14 +32,23 @@ const Page = async ({ params }: Props) => {
 
   return (
     <Container className='items-center justify-start'>
-      <Card className='mb-4 mt-6 w-full items-center justify-start bg-white shadow-md dark:bg-slate-800'>
-        <CardHeader className='flex flex-row items-center'>
-          <ScrollText className='h-auto w-32 rounded-none rounded-s-lg rounded-t-lg object-cover' />
-          <div className='p-4'>
-            <CardTitle>Bugs of {project.name}</CardTitle>
-            <CardDescription className='mb-3 font-normal text-gray-700 dark:text-gray-400'>
-              All the Bugs. For {project.name}
-            </CardDescription>
+      <Card className='mb-4 mt-6 w-full items-center justify-start bg-white p-4 shadow-md dark:bg-slate-800'>
+        <CardHeader>
+          <CardTitle className='flex items-center text-gray-900 dark:text-gray-100'>
+            {project.name} <ProjectRename project={project} />
+          </CardTitle>
+          <Separator className='my-4 dark:bg-gray-700' />
+          <CardDescription className='text-gray-800 dark:text-gray-200'>
+            <span>Admin: </span>
+            <span className='font-bold'>{project.createdBy.username}</span>
+            <p>Created At: {formatDate(project.createdAt)}</p>
+          </CardDescription>
+          <div className='space-x-2'>
+            <Button leftIcon={ChevronUp} variant='outline'>
+              View Members
+            </Button>
+            <Button leftIcon={UserRoundPlus}>Add Members</Button>
+            <Button leftIcon={Trash}>Delete Project</Button>
           </div>
         </CardHeader>
       </Card>
