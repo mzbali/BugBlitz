@@ -8,4 +8,5 @@ public record ProjectDto
     public List<string> Members { get; init; }
     public List<BugDto> Bugs { get; init; }
     public DateTime CreatedAt { get; init; }
+    public bool IsResolved { get; init; }
 }
