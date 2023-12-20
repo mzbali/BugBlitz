@@ -1,31 +1,22 @@
 import { ScrollText } from 'lucide-react';
-import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
 import React from 'react';
 
 import Container from '@/components/Container';
-import CreateProject from '@/components/CreateProject';
+import ModifyProject from '@/components/ModifyProject';
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { DataTable } from '@/components/ui/data-table';
 
 import { getProjects } from '@/app/actions';
 import { Project } from '@/models/types';
 
 import { columns } from './columns';
-import { authOptions } from '../api/auth/[...nextauth]/route';
-import { DataTable } from '../../components/ui/data-table';
 
 const Page = async () => {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect('/api/auth/signin');
-  }
-
   const data: Project[] = await getProjects();
 
   return (
@@ -44,7 +35,7 @@ const Page = async () => {
       <DataTable
         columns={columns}
         data={data}
-        createComponent={<CreateProject />}
+        createComponent={<ModifyProject />}
       />
     </Container>
   );
