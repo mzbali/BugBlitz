@@ -1,16 +1,17 @@
 'use client';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
 import IconButton from '@/components/ui/buttons/IconButton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import PrimaryLink from '@/components/ui/links/PrimaryLink';
 
 import { Project } from '@/models/types';
 
@@ -21,6 +22,14 @@ export const columns: ColumnDef<Project>[] = [
     id: 'name',
     accessorKey: 'name',
     header: 'Name',
+    cell: ({ row }) => {
+      const project = row.original;
+      return (
+        <PrimaryLink href={`/projects/${project.id}`}>
+          {project.name}
+        </PrimaryLink>
+      );
+    },
   },
   {
     header: 'Bugs',
@@ -39,7 +48,7 @@ export const columns: ColumnDef<Project>[] = [
       const date = new Date(row.createdAt);
       return new Intl.DateTimeFormat('default', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
@@ -55,22 +64,15 @@ export const columns: ColumnDef<Project>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <IconButton
-              variant='ghost'
-              icon={MoreHorizontal}
-              className='h-8 w-8 p-0 dark:text-white dark:hover:bg-slate-700'
-            >
+            <IconButton variant='ghost' icon={MoreHorizontal}>
               <span className='sr-only'>Open menu</span>
             </IconButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className='w-28 rounded-md bg-white p-2 shadow-lg dark:bg-slate-800'>
-            <DropdownMenuItem className='rounded-md p-2 text-left hover:bg-indigo-300 dark:hover:text-black'>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
               <Link href={`/projects/${project.id}`}>View</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className='rounded-md p-2 text-left hover:bg-green-300 dark:hover:text-black'>
-              <Link href={`/projects/${project.id}/edit`}>Update</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className='rounded-md p-2 text-left hover:bg-red-300 dark:hover:text-black'>
+            <DropdownMenuItem>
               <button onClick={() => deleteProject(project.id)}>Delete</button>
             </DropdownMenuItem>
           </DropdownMenuContent>
