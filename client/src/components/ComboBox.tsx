@@ -59,7 +59,6 @@ const ComboBox = ({ name }: { name: string }) => {
 
   useEffect(() => {
     getUsers().then((data) => {
-      console.log(data);
       setMemberData(data);
       setLoading(false);
     });
