@@ -1,6 +1,6 @@
 'use server';
 import { revalidateTag } from 'next/cache';
-import { getServerSession } from 'next-auth';
+import { getServerSession, Session } from 'next-auth';
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Bug, BugInputDto, Note, Project, ProjectInput } from '@/models/types';
@@ -8,49 +8,62 @@ import { Bug, BugInputDto, Note, Project, ProjectInput } from '@/models/types';
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PROJECTS_API = `${BASE_API_URL}/Projects`;
 
-const session = await getServerSession(authOptions);
-const headers = {
-  Authorization: `Bearer ${session?.accessToken}`,
-  'Content-Type': 'application/json',
-};
+async function getSessionAndHeaders(session?: Session) {
+  if (!session) {
+    session = (await getServerSession(authOptions)) || undefined;
+  }
+  const headers = {
+    Authorization: `Bearer ${session?.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+  return headers;
+}
 
 const fetchWrapper = {
-  get: async (url: string, tag?: string) =>
-    handleResponse(
+  get: async (url: string, tag?: string, session?: Session) => {
+    const headers = await getSessionAndHeaders(session);
+    return handleResponse(
       await fetch(url, {
         method: 'GET',
         headers,
         next: tag ? { [tag]: {} } : {},
       }),
-    ),
+    );
+  },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  post: async (url: string, body: any, tag?: string) =>
-    handleResponse(
+  post: async (url: string, body: any, tag?: string, session?: Session) => {
+    const headers = await getSessionAndHeaders(session);
+    return handleResponse(
       await fetch(url, {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
         next: tag ? { [tag]: {} } : {},
       }),
-    ),
+    );
+  },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  put: async (url: string, body: any, tag?: string) =>
-    handleResponse(
+  put: async (url: string, body: any, tag?: string, session?: Session) => {
+    const headers = await getSessionAndHeaders(session);
+    return handleResponse(
       await fetch(url, {
         method: 'PUT',
         headers,
         body: JSON.stringify(body),
         next: tag ? { [tag]: {} } : {},
       }),
-    ),
-  delete: async (url: string, tag?: string) =>
-    handleResponse(
+    );
+  },
+  delete: async (url: string, tag?: string, session?: Session) => {
+    const headers = await getSessionAndHeaders(session);
+    return handleResponse(
       await fetch(url, {
         method: 'DELETE',
         headers,
         next: tag ? { [tag]: {} } : {},
       }),
-    ),
+    );
+  },
 };
 
 async function handleResponse(response: Response) {
@@ -71,7 +84,9 @@ export const getUsers = async () =>
 export const getProjects = async () =>
   await fetchWrapper.get(`${PROJECTS_API}`, 'projects');
 
-// Projects
+export const getProject = async (projectId: string, session?: Session) =>
+  await fetchWrapper.get(`${PROJECTS_API}/${projectId}`, 'project', session);
+
 export const createProject = async (value: ProjectInput) => {
   const result: Project = await fetchWrapper.post(
     `${PROJECTS_API}`,
@@ -121,8 +136,10 @@ export const updateBug = async (
   return result;
 };
 
-export const deleteBug = async (projectId: number, bugId: number) => {
+export const deleteBug = async (projectId: string, bugId: string) => {
   try {
+    console.log(projectId, bugId);
+
     await fetchWrapper.delete(
       `${PROJECTS_API}/${projectId}/Bugs/${bugId}`,
       'bugs',
@@ -135,8 +152,8 @@ export const deleteBug = async (projectId: number, bugId: number) => {
 
 // Notes
 export const createNote = async (
-  projectId: number,
-  bugId: number,
+  projectId: string,
+  bugId: string,
   value: Note,
 ) => {
   const result: Note = await fetchWrapper.post(
@@ -149,9 +166,9 @@ export const createNote = async (
 };
 
 export const deleteNote = async (
-  projectId: number,
-  bugId: number,
-  noteId: number,
+  projectId: string,
+  bugId: string,
+  noteId: string,
 ) => {
   try {
     await fetchWrapper.delete(
