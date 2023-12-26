@@ -84,6 +84,9 @@ namespace API.Controllers
                 UpdatedAt = DateTime.UtcNow,
                 CreatedBy = user
             };
+            
+            // Add the creator to the project members
+            project.Members.Add(new Member { Project = project, User = user, JoinedAt = DateTime.UtcNow }); 
 
             // Fetch all users in the member list at once
             var usernames = projectCreateDto.Members.Distinct();
@@ -148,14 +151,14 @@ namespace API.Controllers
             }
 
             // Update project name if provided
-            if (!string.IsNullOrWhiteSpace(projectUpdateDto.Name))
+            if (!string.IsNullOrWhiteSpace(projectUpdateDto?.Name))
                 project.Name = projectUpdateDto.Name;
 
             // Update members if provided
-            if (projectUpdateDto.Members.Count != 0)
+            if (projectUpdateDto?.Members.Count != 0)
             {
                 // Fetch all users in the member list at once
-                var Usernames = projectUpdateDto.Members.Distinct();
+                var Usernames = projectUpdateDto?.Members.Distinct();
                 var members = await _context.Users.Where(u => Usernames.Contains(u.Username)).ToListAsync();
 
                 // Remove existing members not in the updated list
