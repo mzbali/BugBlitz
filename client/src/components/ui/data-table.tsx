@@ -25,7 +25,7 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  createComponent: React.ReactNode;
+  createComponent?: React.ReactNode;
 }
 
 export function DataTable<TData extends object, TValue>({
@@ -110,7 +110,7 @@ export function DataTable<TData extends object, TValue>({
             }
             className='max-w-sm dark:border-gray-700'
           />
-          {createComponent}
+          {createComponent ? createComponent : null}
         </div>
         <Table>
           {renderTableHeader()}
