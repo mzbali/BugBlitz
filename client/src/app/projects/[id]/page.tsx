@@ -1,4 +1,3 @@
-import { ChevronUp, Trash, UserRoundPlus } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 
@@ -6,8 +5,8 @@ import { formatDate } from '@/lib/utils';
 
 import Container from '@/components/Container';
 import ModifyBug from '@/components/ModifyBug';
+import ProjectActions from '@/components/ProjectActions';
 import ProjectRename from '@/components/ProjectRename';
-import Button from '@/components/ui/buttons/Button';
 import {
   Card,
   CardDescription,
@@ -41,14 +40,12 @@ const Page = async ({ params }: Props) => {
           <CardDescription className='text-gray-800 dark:text-gray-200'>
             <span>Admin: </span>
             <span className='font-bold'>{project.createdBy.username}</span>
-            <p>Created At: {formatDate(project.createdAt)}</p>
+            <span className='block'>
+              Created At: {formatDate(project.createdAt)}
+            </span>
           </CardDescription>
-          <div className='space-x-2'>
-            <Button leftIcon={ChevronUp} variant='outline'>
-              View Members
-            </Button>
-            <Button leftIcon={UserRoundPlus}>Add Members</Button>
-            <Button leftIcon={Trash}>Delete Project</Button>
+          <div className='mt-2 space-x-2'>
+            <ProjectActions project={project} />
           </div>
         </CardHeader>
       </Card>
