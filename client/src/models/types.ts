@@ -1,5 +1,6 @@
 export interface Member {
   username: string;
+  joinedAt: string;
 }
 
 export interface User extends Member {
@@ -33,8 +34,8 @@ export interface Note {
 }
 
 export interface ProjectInput {
-  name: string;
-  members: Member[];
+  name?: string;
+  members?: string[];
 }
 
 export interface Project {
