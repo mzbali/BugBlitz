@@ -65,6 +65,7 @@ const ProjectRename: React.FC<Props> = ({ project }) => {
           <Input
             onChange={changeHandler}
             className='my-3 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
+            defaultValue={project.name}
           />
           <DialogFooter>
             <DialogClose asChild>
