@@ -18,36 +18,36 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { createProject, updateProject } from '@/app/actions';
-import { Member, Project } from '@/models/types';
+import { Project } from '@/models/types';
 
 interface Props {
   project?: Project;
   updateVariant?: boolean;
 }
 
-const ModifyProject = ({ project, updateVariant }: Props) => {
+const ModifyProject = ({ project }: Props) => {
   const [loading, setLoading] = useState(false);
   const methods = useForm({
     defaultValues: {
       name: project ? project.name : '',
-      selectedMembers: project ? project.members : [],
+      selectedMembers: project ? project.members.map((m) => m.username) : [],
     },
   });
 
   const onSubmit = async (data: {
     name: string;
-    selectedMembers: Member[];
+    selectedMembers: string[];
   }) => {
     setLoading(true);
     if (project) {
       await updateProject(project.id, {
         name: data.name,
-        members: data.selectedMembers as Member[],
+        members: data.selectedMembers,
       });
     } else {
       await createProject({
         name: data.name,
-        members: data.selectedMembers as Member[],
+        members: data.selectedMembers,
       });
     }
     setLoading(false);
@@ -57,9 +57,7 @@ const ModifyProject = ({ project, updateVariant }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='primary'>
-          {updateVariant ? 'Update Project' : 'Create Project'}
-        </Button>
+        <Button variant='primary'>Create Project</Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px] dark:border-none dark:bg-slate-700'>
         <DialogHeader>
@@ -67,10 +65,8 @@ const ModifyProject = ({ project, updateVariant }: Props) => {
             Create a new project
           </DialogTitle>
           <DialogDescription>
-            {`Fill in the details to ${
-              updateVariant ? 'create a new ' : 'update'
-            } project. Click save when you're
-            done.`}
+            Fill in the details to create a new project. Click save when you're
+            done.
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...methods}>
