@@ -1,8 +1,9 @@
 'use client';
-import { ChevronUp, Trash, UserRoundPlus } from 'lucide-react';
+import { ChevronUp, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
+import MemberAction from '@/components/MemberAction';
 import Button from '@/components/ui/buttons/Button';
 
 import { deleteProject } from '@/app/actions';
@@ -32,7 +33,7 @@ const ProjectActions: React.FC<Props> = ({ project }) => {
       <Button leftIcon={ChevronUp} variant='outline' onClick={toggleOpen}>
         View Members
       </Button>
-      <Button leftIcon={UserRoundPlus}>Add Members</Button>
+      <MemberAction project={project} />
       <Button leftIcon={Trash} onClick={handleDelete} isLoading={loading}>
         Delete Project
       </Button>
