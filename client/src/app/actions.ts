@@ -12,11 +12,10 @@ async function getSessionAndHeaders(session?: Session) {
   if (!session) {
     session = (await getServerSession(authOptions)) || undefined;
   }
-  const headers = {
+  return {
     Authorization: `Bearer ${session?.accessToken}`,
     'Content-Type': 'application/json',
   };
-  return headers;
 }
 
 const fetchWrapper = {
@@ -70,8 +69,7 @@ async function handleResponse(response: Response) {
   const text = await response.text();
   const data = text && JSON.parse(text);
   if (!response.ok) {
-    const error = (data && data.message) || response.statusText;
-    throw error;
+    throw (data && data.message) || response.statusText;
   }
   return data;
 }
