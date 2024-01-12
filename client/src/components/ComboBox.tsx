@@ -71,7 +71,7 @@ const ComboBox = ({ name }: { name: string }) => {
     <Controller
       name={name}
       control={control}
-      defaultValue={[]}
+      defaultValue={selectedMembers || []}
       render={({ field }) => (
         <div>
           <Label className='dark:text-white'>Select Members</Label>
@@ -103,7 +103,10 @@ const ComboBox = ({ name }: { name: string }) => {
             </div>
             <button
               className='flex items-center gap-2 border-l p-1 text-sm text-indigo-500 dark:border-gray-500 dark:text-white'
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={(event) => {
+                event.preventDefault();
+                setIsOpen(!isOpen);
+              }}
             >
               {isOpen ? (
                 <ChevronDownIcon className='cursor-pointer' />
