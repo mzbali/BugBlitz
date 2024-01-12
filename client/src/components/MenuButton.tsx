@@ -24,7 +24,7 @@ const MenuButton = () => {
     if (status === 'unauthenticated') {
       console.log('No JWT');
       console.log(status);
-      void signIn('keycloak');
+      return router.push('/api/auth/signin');
     }
   }, [status, router]);
 
