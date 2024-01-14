@@ -62,7 +62,7 @@ public class BugsController : BaseController
         {
             return BadRequest("Invalid priority value.");
         }
-        
+
         var newBug = new Bug
         {
             Title = bugInputDto.Title,
@@ -139,7 +139,7 @@ public class BugsController : BaseController
 
         if (!string.IsNullOrEmpty(bugInputDto.Description))
             bug.Description = bugInputDto.Description;
-        
+
         if (!Enum.TryParse<Priority>(bugInputDto.Priority, true, out var priority))
         {
             return BadRequest("Invalid priority value.");
