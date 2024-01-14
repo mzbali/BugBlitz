@@ -1,13 +1,10 @@
 using API.Entities;
 namespace API.DTOs;
 
-public record BugDetailsDto
+public record BugDetailsDto : BugInputDto
 {
     public int Id { get; init; }
     public int ProjectId { get; init; }
-    public string Title { get; init; }
-    public string Description { get; init; }
-    public Priority Priority { get; init; }
     public bool IsResolved { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
