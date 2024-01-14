@@ -25,7 +25,14 @@ export const columns: ColumnDef<Bug>[] = [
     header: 'name',
     cell: ({ row }) => {
       const bug = row.original;
-      return <PrimaryLink href={`/bugs/${bug.id}`}>{bug.title}</PrimaryLink>;
+      return (
+        <PrimaryLink
+          variant='primary'
+          href={`/projects/${bug.projectId}/bugs/${bug.id}`}
+        >
+          {bug.title}
+        </PrimaryLink>
+      );
     },
   },
   {
@@ -108,7 +115,9 @@ export const columns: ColumnDef<Bug>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
-              <Link href={`/bugs/${bug.id}`}>View</Link>
+              <Link href={`/projects/${bug.projectId}/bugs/${bug.id}`}>
+                View
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <button onClick={() => deleteBug(bug.projectId, bug.id)}>
