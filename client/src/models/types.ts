@@ -47,12 +47,9 @@ export interface Project {
   createdAt: string;
 }
 
-export interface BugDetails {
-  id: number;
-  projectId: number;
-  title: string;
-  description: string;
-  priority: string;
+export interface BugDetails extends BugInputDto {
+  id: string;
+  projectId: string;
   isResolved: boolean;
   createdAt: string;
   updatedAt: string | null;

@@ -3,7 +3,14 @@ import { revalidateTag } from 'next/cache';
 import { getServerSession, Session } from 'next-auth';
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { Bug, BugInputDto, Note, Project, ProjectInput } from '@/models/types';
+import {
+  Bug,
+  BugDetails,
+  BugInputDto,
+  Note,
+  Project,
+  ProjectInput,
+} from '@/models/types';
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PROJECTS_API = `${BASE_API_URL}/Projects`;
@@ -47,6 +54,18 @@ const fetchWrapper = {
     return handleResponse(
       await fetch(url, {
         method: 'PUT',
+        headers,
+        body: JSON.stringify(body),
+        next: tag ? { [tag]: {} } : {},
+      }),
+    );
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  patch: async (url: string, body: any, tag?: string, session?: Session) => {
+    const headers = await getSessionAndHeaders(session);
+    return handleResponse(
+      await fetch(url, {
+        method: 'PATCH',
         headers,
         body: JSON.stringify(body),
         next: tag ? { [tag]: {} } : {},
@@ -110,6 +129,17 @@ export const deleteProject = async (projectId: number) => {
 };
 
 // Bugs
+export const getBug = async (
+  projectId: string,
+  bugId: string,
+  session?: Session,
+) =>
+  (await fetchWrapper.get(
+    `${PROJECTS_API}/${projectId}/Bugs/${bugId}`,
+    'bugs',
+    session,
+  )) as BugDetails;
+
 export const createBug = async (projectId: number, value: BugInputDto) => {
   const result: Bug = await fetchWrapper.post(
     `${PROJECTS_API}/${projectId}/Bugs`,
@@ -148,6 +178,35 @@ export const deleteBug = async (projectId: string, bugId: string) => {
   revalidateTag('bugs');
 };
 
+export const closeBug = async (
+  projectId: string,
+  bugId: string,
+  session?: Session,
+) => {
+  const result = await fetchWrapper.patch(
+    `${PROJECTS_API}/${projectId}/Bugs/${bugId}/close`,
+    {},
+    'bugs',
+    session,
+  );
+  revalidateTag('bugs');
+  return result;
+};
+
+export const reopenBug = async (
+  projectId: string,
+  bugId: string,
+  session?: Session,
+) => {
+  const result = await fetchWrapper.patch(
+    `${PROJECTS_API}/${projectId}/Bugs/${bugId}/reopen`,
+    {},
+    'bugs',
+    session,
+  );
+  revalidateTag('bugs');
+  return result;
+};
 // Notes
 export const createNote = async (
   projectId: string,
