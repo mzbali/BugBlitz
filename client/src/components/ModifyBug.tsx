@@ -33,24 +33,25 @@ interface Props {
 
 const ModifyBug = ({ bug, projectId }: Props) => {
   const [loading, setLoading] = useState(false);
+
   const methods = useForm({
     defaultValues: {
       title: bug ? bug.title : '',
       description: bug ? bug.description : '',
-      priority: bug?.priority,
+      priority: bug ? bug.priority : 'Low',
     },
   });
 
   const onSubmit = async (data: FieldValues) => {
     setLoading(true);
     if (bug) {
-      await updateBug(parseInt(projectId), parseInt(bug.id), {
+      await updateBug(projectId, bug.id, {
         title: data.title,
         description: data.description,
         priority: data.priority,
       });
     } else {
-      await createBug(parseInt(projectId), {
+      await createBug(projectId, {
         title: data.title,
         description: data.description,
         priority: data.priority,
@@ -64,13 +65,25 @@ const ModifyBug = ({ bug, projectId }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='primary'>Create Bug</Button>
+        <Button
+          variant='primary'
+          onClick={() => {
+            methods.reset({
+              title: bug ? bug.title : '',
+              description: bug ? bug.description : '',
+              priority: bug ? bug.priority : 'Low',
+            });
+          }}
+        >
+          {bug ? 'Update Bug Info' : 'Create Bug'}
+        </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px] dark:border-none dark:bg-slate-700'>
         <DialogHeader>
           <DialogTitle className='dark:text-white'>Update a Bug</DialogTitle>
           <DialogDescription>
-            Fill in the details to create a new bug. Click save when youre done.
+            Fill in the details to {bug ? 'update' : 'create'} a bug. Click save
+            when youre done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -105,10 +118,12 @@ const ModifyBug = ({ bug, projectId }: Props) => {
               <Controller
                 name='priority'
                 control={methods.control}
-                defaultValue='Low'
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
-                    <SelectTrigger className='my-3 w-full'>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className='my-3 w-full dark:text-white'>
                       <SelectValue placeholder='Select Priority...' />
                     </SelectTrigger>
                     <SelectContent>

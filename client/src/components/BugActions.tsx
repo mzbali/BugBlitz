@@ -1,5 +1,5 @@
 'use client';
-import { Pencil, ShieldCheck, Trash } from 'lucide-react';
+import { ShieldCheck, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -7,6 +7,8 @@ import Button from '@/components/ui/buttons/Button';
 
 import { closeBug, deleteBug, reopenBug } from '@/app/actions';
 import { BugDetails } from '@/models/types';
+
+import ModifyBug from './ModifyBug';
 
 interface Props {
   bug: BugDetails;
@@ -41,9 +43,7 @@ const BugActions: React.FC<Props> = ({ bug }) => {
       >
         {bug.isResolved ? 'Reopen Bug' : 'Close Bug'}
       </Button>
-      <Button leftIcon={Pencil} onClick={handleDelete} isLoading={loading}>
-        Update Bug Info
-      </Button>
+      <ModifyBug bug={bug} projectId={bug.projectId} />
       <Button leftIcon={Trash} onClick={handleDelete} isLoading={loading}>
         Delete Bug
       </Button>
