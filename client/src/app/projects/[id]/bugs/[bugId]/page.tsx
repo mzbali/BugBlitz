@@ -4,6 +4,7 @@ import { cn, formatDate } from '@/lib/utils';
 
 import BugActions from '@/components/BugActions';
 import Container from '@/components/Container';
+import Notes from '@/components/Notes';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -34,7 +35,7 @@ const Page = async ({ params }: Props) => {
           <CardDescription className='space-y-1 text-gray-800 dark:text-gray-200'>
             <span>Author: </span>
             <span className='font-bold'>{bug.createdBy.username}</span>
-            <p>
+            <div>
               <span>Status: </span>
               <span>
                 <Badge
@@ -47,8 +48,8 @@ const Page = async ({ params }: Props) => {
                   {bug.isResolved ? 'Resolved' : 'Open'}
                 </Badge>
               </span>
-            </p>
-            <p>
+            </div>
+            <div>
               <span>Priority: </span>
               <span>
                 <Badge
@@ -65,16 +66,38 @@ const Page = async ({ params }: Props) => {
                   {bug.priority}
                 </Badge>
               </span>
-            </p>
+            </div>
             <span className='block'>
               Created At: {formatDate(bug.createdAt)}
             </span>
+            {bug.isResolved && bug.closedBy && bug.closedAt && (
+              <p className='block'>
+                Closed By:{' '}
+                <span className='font-bold'>{bug.closedBy.username}</span> at{' '}
+                {formatDate(bug.closedAt)}
+              </p>
+            )}
+            {!bug.isResolved && bug.reopenedBy && bug.reopenedAt && (
+              <p className='block'>
+                Reopened By:{' '}
+                <span className='font-bold'>{bug.reopenedBy.username}</span> at{' '}
+                {formatDate(bug.reopenedAt)}
+              </p>
+            )}
+            {bug.updatedBy && bug.updatedAt && (
+              <p className='block'>
+                Last Updated By:{' '}
+                <span className='font-bold'>{bug.updatedBy.username}</span>{' '}
+                {formatDate(bug.updatedAt)}
+              </p>
+            )}
           </CardDescription>
           <div className='mt-2 space-x-2'>
             <BugActions bug={bug} />
           </div>
         </CardHeader>
       </Card>
+      <Notes bug={bug} />
     </Container>
   );
 };
