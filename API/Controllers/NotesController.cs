@@ -1,5 +1,7 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
@@ -33,7 +35,7 @@ public class NotesController : BaseController
 
         var result = await _context.SaveChangesAsync() > 0;
 
-        if (result) return CreatedAtAction(nameof(CreateNote), new { noteId = note.Id, bugId = bugId, projectId = projectId, });
+        if (result) return CreatedAtAction(nameof(CreateNote), new { noteId = note.Id, bugId, projectId, });
 
         return BadRequest(new ProblemDetails
         {
@@ -43,7 +45,7 @@ public class NotesController : BaseController
     }
 
     [HttpPut("{noteId}")]
-    public async Task<IActionResult> UpdateNote(int bugId, int noteId, [FromBody] string body)
+    public async Task<ActionResult<NoteDto>> UpdateNote(int bugId, int noteId, [FromBody] string body)
     {
         if (string.IsNullOrWhiteSpace(body))
             return BadRequest("Note body is empty");
@@ -61,7 +63,7 @@ public class NotesController : BaseController
 
         var result = await _context.SaveChangesAsync() > 0;
 
-        if (result) return Ok(note);
+        if (result) return note.Adapt<NoteDto>();
 
         return BadRequest(new ProblemDetails
         {
