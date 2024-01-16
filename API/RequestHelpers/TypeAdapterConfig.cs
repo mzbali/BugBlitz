@@ -14,11 +14,11 @@ public static class TypeAdapterConfig
         .Map(dest => dest.Username, src => src.Username);
 
         TypeAdapterConfig<Member, MemberDto>.NewConfig()
-        .Map(dest=> dest.Username, src => src.User.Username);
+        .Map(dest => dest.Username, src => src.User.Username);
 
         TypeAdapterConfig<Project, ProjectDto>.NewConfig()
         .Map(dest => dest.Members, src => src.Members.Adapt<List<MemberDto>>())
-        .Map(dest=>dest.Bugs, src=>src.Bugs.Adapt<List<BugDto>>());
+        .Map(dest => dest.Bugs, src => src.Bugs.Adapt<List<BugDto>>());
 
         TypeAdapterConfig<Bug, BugDetailsDto>.NewConfig()
         .Map(dest => dest.Notes, src => src.Notes.Adapt<List<NoteDto>>());
