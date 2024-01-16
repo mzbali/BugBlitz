@@ -7,7 +7,7 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { CogIcon, LogOutIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import React, { useEffect } from 'react';
 
@@ -16,17 +16,19 @@ import { getInitials } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import TextButton from './ui/buttons/TextButton';
+
+const pathnames = ['/', '/components'];
+
 const MenuButton = () => {
   const { status, data } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      console.log('No JWT');
-      console.log(status);
+    if (status === 'unauthenticated' && !pathnames.includes(pathname)) {
       return router.push('/api/auth/signin');
     }
-  }, [status, router]);
+  }, [status, router, pathname]);
 
   if (status === 'loading') {
     return <>...</>;
