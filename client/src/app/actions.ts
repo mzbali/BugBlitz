@@ -140,7 +140,7 @@ export const getBug = async (
     session,
   )) as BugDetails;
 
-export const createBug = async (projectId: number, value: BugInputDto) => {
+export const createBug = async (projectId: string, value: BugInputDto) => {
   const result: Bug = await fetchWrapper.post(
     `${PROJECTS_API}/${projectId}/Bugs`,
     value,
@@ -151,8 +151,8 @@ export const createBug = async (projectId: number, value: BugInputDto) => {
 };
 
 export const updateBug = async (
-  projectId: number,
-  bugId: number,
+  projectId: string,
+  bugId: string,
   value: BugInputDto,
 ) => {
   const result = await fetchWrapper.put(
@@ -211,11 +211,30 @@ export const reopenBug = async (
 export const createNote = async (
   projectId: string,
   bugId: string,
-  value: Note,
+  note: string,
 ) => {
   const result: Note = await fetchWrapper.post(
     `${PROJECTS_API}/${projectId}/Bugs/${bugId}/Notes`,
-    value,
+    note,
+    'notes',
+  );
+  revalidateTag('notes');
+  return result;
+};
+
+export const updateNote = async (
+  projectId: string,
+  bugId: string,
+  noteId: string,
+  body: string,
+) => {
+  if (!body.trim()) {
+    throw new Error('Note body is empty');
+  }
+
+  const result: Note = await fetchWrapper.put(
+    `${PROJECTS_API}/${projectId}/Bugs/${bugId}/Notes/${noteId}`,
+    body,
     'notes',
   );
   revalidateTag('notes');
