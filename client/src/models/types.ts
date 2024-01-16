@@ -25,8 +25,8 @@ export interface Bug extends BugInputDto {
 }
 
 export interface Note {
-  id: number;
-  bugId: number;
+  id: string;
+  bugId: string;
   body: string;
   createdAt: string;
   updatedAt: string;
