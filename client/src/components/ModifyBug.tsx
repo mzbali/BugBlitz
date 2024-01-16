@@ -1,5 +1,6 @@
 'use client';
 import { DialogClose } from '@radix-ui/react-dialog';
+import { PencilLine } from 'lucide-react';
 import React, { useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 
@@ -67,6 +68,7 @@ const ModifyBug = ({ bug, projectId }: Props) => {
       <DialogTrigger asChild>
         <Button
           variant='primary'
+          leftIcon={bug ? PencilLine : undefined}
           onClick={() => {
             methods.reset({
               title: bug ? bug.title : '',
