@@ -1,4 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { redirect } from 'next/navigation';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import { type JWT } from 'next-auth/jwt';
 import { type OAuthConfig } from 'next-auth/providers';
@@ -65,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         } else {
           console.error(`HTTP error! status: ${response.status}`);
           token.refreshToken = undefined;
+          redirect('/');
         }
       }
       return token;
