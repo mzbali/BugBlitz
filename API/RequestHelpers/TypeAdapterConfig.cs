@@ -18,7 +18,10 @@ public static class TypeAdapterConfig
 
         TypeAdapterConfig<Project, ProjectDto>.NewConfig()
         .Map(dest => dest.Members, src => src.Members.Adapt<List<MemberDto>>())
-        .Map(dest => dest.Bugs, src => src.Bugs.Adapt<List<BugDto>>());
+        .Map(dest => dest.BugsCount, src => src.Bugs.Count);
+
+        TypeAdapterConfig<Bug, BugDto>.NewConfig()
+        .Map(dest => dest.NotesCount, src => src.Notes.Count);
 
         TypeAdapterConfig<Bug, BugDetailsDto>.NewConfig()
         .Map(dest => dest.Notes, src => src.Notes.Adapt<List<NoteDto>>());
