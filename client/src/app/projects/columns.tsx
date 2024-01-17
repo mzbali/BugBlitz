@@ -35,7 +35,7 @@ export const columns: ColumnDef<Project>[] = [
   },
   {
     header: 'Bugs',
-    accessorFn: (row) => row.bugs.length,
+    accessorKey: 'bugsCount',
   },
   {
     header: 'Members',

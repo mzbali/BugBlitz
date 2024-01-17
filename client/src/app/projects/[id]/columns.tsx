@@ -97,7 +97,7 @@ export const columns: ColumnDef<Bug>[] = [
   },
   {
     id: 'notes',
-    accessorFn: (row) => row.notes?.length || 0,
+    accessorKey: 'notesCount',
     header: 'Notes',
   },
   {
