@@ -19,7 +19,7 @@ export interface Bug extends BugInputDto {
   updatedAt: string | null;
   createdBy: Member;
   updatedBy: Member | null;
-  notes: Note[];
+  notesCount: number;
   isResolved: boolean;
   projectId: string;
 }
@@ -43,7 +43,7 @@ export interface Project {
   name: string;
   createdBy: Member;
   members: Member[];
-  bugs: Bug[];
+  bugsCount: number;
   createdAt: string;
 }
 
