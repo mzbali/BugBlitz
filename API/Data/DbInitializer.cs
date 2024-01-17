@@ -32,7 +32,7 @@ public static class DbInitializer
                 new Bug { Title = "Bug 2", Description = "Description 2", CreatedBy = admin, Project = projects[0] },
                 new Bug { Title = "Bug 3", Description = "Description 3", CreatedBy = admin, Project = projects[0] },
                 new Bug { Title = "Bug 4", Description = "Description 4", CreatedBy = admin, Project = projects[1],  IsResolved=true, ClosedBy = admin, ClosedAt = DateTime.UtcNow},
-                new Bug { Title = "Bug 5", Description = "Description 5", CreatedBy = admin, Project = projects[1], Priority = Priority.High},
+                new Bug { Title = "Bug 5", Description = "Description 5", CreatedBy = admin, Project = projects[4], Priority = Priority.High},
                 new Bug { Title = "Bug 6", Description = "Description 6", CreatedBy = admin, Project = projects[1] },
                 new Bug { Title = "Bug 7", Description = "Description 7", CreatedBy = admin, Project = projects[2], Priority = Priority.High},
                 new Bug { Title = "Bug 8", Description = "Description 8", CreatedBy = admin, Project = projects[2] },
