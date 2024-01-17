@@ -40,11 +40,13 @@ namespace API.Controllers
         }
 
         [HttpGet("{projectId}")]
-        public async Task<ActionResult<ProjectDto>> GetProject(int projectId)
+        public async Task<ActionResult<ProjectDetailsDto>> GetProject(int projectId)
+
         {
             var project = await _context.Projects
             .Include(p => p.CreatedBy)
             .Include(p => p.Bugs)
+                    .ThenInclude(b => b.Notes)
             .Include(p => p.Members)
             .ThenInclude(member => member.User)
             .FirstOrDefaultAsync(p => p.Id == projectId);
@@ -84,9 +86,9 @@ namespace API.Controllers
                 UpdatedAt = DateTime.UtcNow,
                 CreatedBy = user
             };
-            
+
             // Add the creator to the project members
-            project.Members.Add(new Member { Project = project, User = user, JoinedAt = DateTime.UtcNow }); 
+            project.Members.Add(new Member { Project = project, User = user, JoinedAt = DateTime.UtcNow });
 
             // Fetch all users in the member list at once
             var usernames = projectCreateDto.Members.Distinct();

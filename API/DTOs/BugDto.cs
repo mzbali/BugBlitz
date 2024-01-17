@@ -9,7 +9,7 @@ public record BugDto : BugInputDto
     public MemberDto CreatedBy { get; init; }
     public MemberDto? UpdatedBy { get; init; }
 
-    public List<NoteDto> Note { get; init; }
+    public int NotesCount { get; init; }
 
     public int ProjectId { get; init; }
 
