@@ -1,3 +1,4 @@
+// User
 export interface Member {
   username: string;
   joinedAt: string;
@@ -7,6 +8,29 @@ export interface User extends Member {
   fullName: string;
 }
 
+// Project
+export interface ProjectInput {
+  name?: string;
+  members?: string[];
+}
+
+export interface ProjectBase {
+  id: number;
+  name: string;
+  createdBy: Member;
+  members: Member[];
+  createdAt: string;
+}
+
+export interface Project extends ProjectBase {
+  bugsCount: number;
+}
+
+export interface ProjectDetails extends ProjectBase {
+  bugs: Bug[];
+}
+
+// Bug
 export interface BugInputDto {
   title: string;
   description: string;
@@ -24,29 +48,6 @@ export interface Bug extends BugInputDto {
   projectId: string;
 }
 
-export interface Note {
-  id: string;
-  bugId: string;
-  body: string;
-  createdAt: string;
-  updatedAt: string;
-  author: Member;
-}
-
-export interface ProjectInput {
-  name?: string;
-  members?: string[];
-}
-
-export interface Project {
-  id: number;
-  name: string;
-  createdBy: Member;
-  members: Member[];
-  bugsCount: number;
-  createdAt: string;
-}
-
 export interface BugDetails extends BugInputDto {
   id: string;
   projectId: string;
@@ -60,4 +61,14 @@ export interface BugDetails extends BugInputDto {
   closedBy: Member | null;
   reopenedBy: Member | null;
   notes: Note[];
+}
+
+// Note
+export interface Note {
+  id: string;
+  bugId: string;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+  author: Member;
 }
