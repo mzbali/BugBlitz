@@ -17,6 +17,9 @@ declare module 'next-auth/jwt' {
 declare module 'next-auth' {
   interface Session {
     accessToken?: string;
+    user: {
+      username: string;
+    };
   }
 }
 
@@ -40,6 +43,7 @@ export const authOptions: NextAuthOptions = {
       const decodedToken = jwt.decode(
         token.accessToken as string,
       ) as JwtPayload;
+      token.username = decodedToken.preferred_username;
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodedToken.exp && decodedToken.exp < currentTime) {
         // Token is expired, refresh it
@@ -76,6 +80,10 @@ export const authOptions: NextAuthOptions = {
         session = Object.assign({}, session, {
           accessToken: token.accessToken,
           refreshToken: token.refreshToken,
+          user: {
+            ...session.user,
+            username: token.username,
+          },
         });
       }
       return session;
