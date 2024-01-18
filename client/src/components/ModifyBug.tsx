@@ -25,10 +25,10 @@ import {
 } from '@/components/ui/select';
 
 import { createBug, updateBug } from '@/app/actions';
-import { Bug } from '@/models/types';
+import { BugDetails } from '@/models/types';
 
 interface Props {
-  bug?: Bug;
+  bug?: BugDetails;
   projectId: string;
 }
 
@@ -68,6 +68,7 @@ const ModifyBug = ({ bug, projectId }: Props) => {
       <DialogTrigger asChild>
         <Button
           variant='primary'
+          disabled={bug?.isResolved}
           leftIcon={bug ? PencilLine : undefined}
           onClick={() => {
             methods.reset({
