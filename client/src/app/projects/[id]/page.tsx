@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { getProject } from '@/app/actions';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { columns } from '@/app/projects/[id]/columns';
-import { Project } from '@/models/types';
+import { ProjectDetails } from '@/models/types';
 
 type Props = {
   params: { id: string };
@@ -27,7 +27,10 @@ type Props = {
 
 const Page = async ({ params }: Props) => {
   const session = await getServerSession(authOptions);
-  const project: Project = await getProject(params.id, session || undefined);
+  const project: ProjectDetails = await getProject(
+    params.id,
+    session || undefined,
+  );
 
   return (
     <Container className='items-center justify-start'>
