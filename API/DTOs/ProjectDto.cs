@@ -9,5 +9,4 @@ public record ProjectDto
     public int BugsCount { get; init; }
 
     public DateTime CreatedAt { get; init; }
-    public bool IsResolved { get; init; }
 }
