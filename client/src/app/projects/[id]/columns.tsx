@@ -92,7 +92,7 @@ export const columns: ColumnDef<Bug>[] = [
     header: 'Updated',
     cell: ({ row }) => {
       const bug = row.original;
-      return formatDate(bug.updatedAt);
+      return `${formatDate(bug.updatedAt)} ~ ${bug.updatedBy?.username}`;
     },
   },
   {
