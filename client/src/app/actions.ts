@@ -114,7 +114,7 @@ export const createProject = async (value: ProjectInput) => {
   return result;
 };
 
-export const updateProject = async (projectId: number, value: ProjectInput) => {
+export const updateProject = async (projectId: string, value: ProjectInput) => {
   await fetchWrapper.put(`${PROJECTS_API}/${projectId}`, value, 'projects');
   revalidateTag('projects');
 };
