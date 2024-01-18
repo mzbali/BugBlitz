@@ -1,9 +1,9 @@
 'use client';
-import { DialogClose } from '@radix-ui/react-dialog';
 import { Pencil } from 'lucide-react';
 import React, { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 
+import DialogSubmitButton from '@/components/DialogSubmitButton';
 import Button from '@/components/ui/buttons/Button';
 import {
   Dialog,
@@ -27,7 +27,12 @@ interface Props {
 const ModifyNote = ({ bug, note }: Props) => {
   const [loading, setLoading] = useState(false);
 
-  const methods = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({
     defaultValues: {
       note: note ? note.body : '',
     },
@@ -45,7 +50,7 @@ const ModifyNote = ({ bug, note }: Props) => {
       console.error(error);
     } finally {
       setLoading(false);
-      methods.reset(); // Reset the form values
+      reset(); // Reset the form values
     }
   };
 
@@ -56,7 +61,7 @@ const ModifyNote = ({ bug, note }: Props) => {
           variant='primary'
           leftIcon={note ? Pencil : undefined}
           onClick={() => {
-            methods.reset({
+            reset({
               note: note ? note.body : '',
             });
           }}
@@ -70,27 +75,28 @@ const ModifyNote = ({ bug, note }: Props) => {
             {note ? 'Update Note' : 'Create a Note'}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='grid gap-4 py-2'>
             <div className='flex flex-col items-center justify-center'>
               <Label
                 htmlFor='body'
-                className='self-start whitespace-nowrap text-right dark:text-white'
+                className='mb-3 self-start whitespace-nowrap text-right dark:text-white'
               >
                 Note
               </Label>
               <Textarea
-                {...methods.register('note', { required: true })}
-                className='my-3 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
+                {...register('note', { required: 'Note is required.' })}
+                className='mb-2 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
               />
+              {errors.note && (
+                <p className='self-start text-xs text-red-500'>
+                  {errors.note.message}
+                </p>
+              )}
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button isLoading={loading} type='submit'>
-                Save
-              </Button>
-            </DialogClose>
+            <DialogSubmitButton isValid={isValid} loading={loading} />
           </DialogFooter>
         </form>
       </DialogContent>

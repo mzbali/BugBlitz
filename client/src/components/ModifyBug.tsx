@@ -1,5 +1,4 @@
 'use client';
-import { DialogClose } from '@radix-ui/react-dialog';
 import { PencilLine } from 'lucide-react';
 import React, { useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
@@ -27,6 +26,8 @@ import {
 import { createBug, updateBug } from '@/app/actions';
 import { BugDetails } from '@/models/types';
 
+import DialogSubmitButton from './DialogSubmitButton';
+
 interface Props {
   bug?: BugDetails;
   projectId: string;
@@ -35,7 +36,13 @@ interface Props {
 const ModifyBug = ({ bug, projectId }: Props) => {
   const [loading, setLoading] = useState(false);
 
-  const methods = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+    control,
+  } = useForm({
     defaultValues: {
       title: bug ? bug.title : '',
       description: bug ? bug.description : '',
@@ -58,11 +65,9 @@ const ModifyBug = ({ bug, projectId }: Props) => {
         priority: data.priority,
       });
     }
-    console.log(data);
     setLoading(false);
-    methods.reset(); // Reset the form values
+    reset(); // Reset the form values
   };
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -71,7 +76,7 @@ const ModifyBug = ({ bug, projectId }: Props) => {
           disabled={bug?.isResolved}
           leftIcon={bug ? PencilLine : undefined}
           onClick={() => {
-            methods.reset({
+            reset({
               title: bug ? bug.title : '',
               description: bug ? bug.description : '',
               priority: bug ? bug.priority : 'Low',
@@ -89,38 +94,50 @@ const ModifyBug = ({ bug, projectId }: Props) => {
             when youre done.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='grid gap-4 py-2'>
             <div className='flex flex-col items-center justify-center'>
               <Label
                 htmlFor='title'
-                className='self-start whitespace-nowrap text-right dark:text-white'
+                className='self-start whitespace-nowrap pb-2 text-right dark:text-white'
               >
                 Bug Title
               </Label>
               <Input
-                {...methods.register('title', { required: true })}
-                className='my-3 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
+                {...register('title', { required: 'Title is required.' })}
+                className='my-1 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
               />
+              {errors.title && (
+                <p className='self-start text-xs text-red-500'>
+                  {errors.title.message}
+                </p>
+              )}
               <Label
                 htmlFor='description'
-                className='self-start whitespace-nowrap text-right dark:text-white'
+                className='self-start whitespace-nowrap pb-2 pt-3 text-right dark:text-white'
               >
                 Bug Description
               </Label>
               <Input
-                {...methods.register('description', { required: true })}
-                className='my-3 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
+                {...register('description', {
+                  required: 'Description is required.',
+                })}
+                className='my-1 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
               />
+              {errors.description && (
+                <p className='self-start text-xs text-red-500'>
+                  {errors.description.message}
+                </p>
+              )}
               <Label
                 htmlFor='priority'
-                className='self-start whitespace-nowrap text-right dark:text-white'
+                className='self-start whitespace-nowrap pb-2 pt-3 text-right dark:text-white'
               >
                 Bug Priority
               </Label>
               <Controller
                 name='priority'
-                control={methods.control}
+                control={control}
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
@@ -140,11 +157,7 @@ const ModifyBug = ({ bug, projectId }: Props) => {
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button isLoading={loading} type='submit'>
-                Save
-              </Button>
-            </DialogClose>
+            <DialogSubmitButton isValid={isValid} loading={loading} />
           </DialogFooter>
         </form>
       </DialogContent>

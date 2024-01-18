@@ -1,9 +1,10 @@
 'use client';
-import { DialogClose } from '@radix-ui/react-dialog';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ComboBox from '@/components/ComboBox';
+import DialogSubmitButton from '@/components/DialogSubmitButton';
 import Button from '@/components/ui/buttons/Button';
 import {
   Dialog,
@@ -27,6 +28,8 @@ interface Props {
 
 const ModifyProject = ({ project }: Props) => {
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+
   const methods = useForm({
     defaultValues: {
       name: project ? project.name : '',
@@ -39,6 +42,9 @@ const ModifyProject = ({ project }: Props) => {
     selectedMembers: string[];
   }) => {
     setLoading(true);
+    if (data.selectedMembers.length === 0) {
+      data.selectedMembers = [session?.user?.username || ''];
+    }
     if (project) {
       await updateProject(project.id, {
         name: data.name,
@@ -80,18 +86,24 @@ const ModifyProject = ({ project }: Props) => {
                   Project Name
                 </Label>
                 <Input
-                  {...methods.register('name', { required: true })}
-                  className='focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
+                  {...methods.register('name', {
+                    required: 'Name is required.',
+                  })}
+                  className='mb-1 focus:border-0 focus:outline-none focus:ring-0 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-600'
                 />
+                {methods.formState.errors.name && (
+                  <p className='self-start text-xs text-red-500'>
+                    {methods.formState.errors.name.message}
+                  </p>
+                )}
               </div>
               <ComboBox name='selectedMembers' />
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button isLoading={loading} type='submit'>
-                  Save
-                </Button>
-              </DialogClose>
+              <DialogSubmitButton
+                isValid={methods.formState.isValid}
+                loading={loading}
+              />
             </DialogFooter>
           </form>
         </FormProvider>
