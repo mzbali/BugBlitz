@@ -18,10 +18,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { updateProject } from '@/app/actions';
-import { Project } from '@/models/types';
+import { ProjectDetails } from '@/models/types';
 
 interface Props {
-  project: Project;
+  project: ProjectDetails;
 }
 
 const ProjectRename: React.FC<Props> = ({ project }) => {

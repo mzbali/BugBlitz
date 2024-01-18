@@ -8,10 +8,10 @@ import Button from '@/components/ui/buttons/Button';
 
 import { deleteProject } from '@/app/actions';
 import MembersTable from '@/app/projects/[id]/MembersTable';
-import { Project } from '@/models/types';
+import { ProjectDetails } from '@/models/types';
 
 interface Props {
-  project: Project;
+  project: ProjectDetails;
 }
 
 const ProjectActions: React.FC<Props> = ({ project }) => {

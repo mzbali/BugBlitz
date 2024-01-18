@@ -17,10 +17,10 @@ import {
 } from '@/components/ui/dialog';
 
 import { updateProject } from '@/app/actions';
-import { Project } from '@/models/types';
+import { ProjectDetails } from '@/models/types';
 
 interface Props {
-  project: Project;
+  project: ProjectDetails;
 }
 
 const MemberAction: React.FC<Props> = ({ project }) => {

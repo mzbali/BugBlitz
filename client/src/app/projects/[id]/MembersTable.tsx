@@ -14,10 +14,10 @@ import {
 } from '@/components/ui/table';
 
 import { updateProject } from '@/app/actions';
-import { Member, Project } from '@/models/types';
+import { Member, ProjectDetails } from '@/models/types';
 
 interface Props {
-  project: Project;
+  project: ProjectDetails;
 }
 const MembersTable = ({ project }: Props) => {
   const removeMember = async (member: Member) => {
