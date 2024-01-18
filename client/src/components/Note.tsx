@@ -25,6 +25,11 @@ const Note = ({ note, bug }: Props) => {
             <p className='text-sm dark:text-gray-300'>
               {formatDate(note.createdAt, true)}
             </p>
+            {note.createdAt !== note.updatedAt && (
+              <p className='text-sm dark:text-gray-300'>
+                Edited {formatDate(note.updatedAt, true)}
+              </p>
+            )}
           </div>
         </div>
         <div className='flex space-x-2'>
