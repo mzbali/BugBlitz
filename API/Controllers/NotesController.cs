@@ -60,6 +60,7 @@ public class NotesController : BaseController
         if (note is null) return NotFound("Could not find the note.");
 
         note.Body = body;
+        note.UpdatedAt = DateTime.UtcNow;
 
         var result = await _context.SaveChangesAsync() > 0;
 
