@@ -15,7 +15,7 @@ export interface ProjectInput {
 }
 
 export interface ProjectBase {
-  id: number;
+  id: string;
   name: string;
   createdBy: Member;
   members: Member[];

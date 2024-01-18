@@ -119,7 +119,7 @@ export const updateProject = async (projectId: number, value: ProjectInput) => {
   revalidateTag('projects');
 };
 
-export const deleteProject = async (projectId: number) => {
+export const deleteProject = async (projectId: string) => {
   try {
     await fetchWrapper.delete(`${PROJECTS_API}/${projectId}`, 'projects');
   } catch (error) {
