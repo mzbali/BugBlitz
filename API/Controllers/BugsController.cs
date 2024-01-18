@@ -190,6 +190,10 @@ public class BugsController : BaseController
         bug.ClosedAt = DateTime.UtcNow;
         bug.ReopenedBy = null;
         bug.ReopenedAt = null;
+        
+        // Set the UpdatedBy and UpdatedAt properties
+        bug.UpdatedBy = user;
+        bug.UpdatedAt = DateTime.UtcNow;
 
         var result = await _context.SaveChangesAsync() > 0;
         if (result) return Ok();
@@ -228,6 +232,9 @@ public class BugsController : BaseController
         bug.ClosedBy = null;
         bug.ClosedAt = null;
 
+        // Set the UpdatedBy and UpdatedAt properties
+        bug.UpdatedBy = user;
+        bug.UpdatedAt = DateTime.UtcNow;
 
         var result = await _context.SaveChangesAsync() > 0;
         if (result) return Ok();
