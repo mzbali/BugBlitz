@@ -1,6 +1,7 @@
 import { ScrollText } from 'lucide-react';
 import React from 'react';
 
+import BackLink from '@/components/BackLink';
 import Container from '@/components/Container';
 import ModifyProject from '@/components/ModifyProject';
 import {
@@ -21,7 +22,8 @@ const Page = async () => {
 
   return (
     <Container className='items-center justify-start'>
-      <Card className='mb-4 mt-6 w-full items-center justify-start bg-white shadow-md dark:bg-slate-800'>
+      <BackLink />
+      <Card className='mb-4 mt-2 w-full items-center justify-start bg-white shadow-md dark:bg-slate-800'>
         <CardHeader className='flex flex-row items-center'>
           <ScrollText className='h-auto w-32 rounded-none rounded-s-lg rounded-t-lg object-cover' />
           <div className='p-4'>

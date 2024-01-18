@@ -3,6 +3,7 @@ import React from 'react';
 
 import { formatDate } from '@/lib/utils';
 
+import BackLink from '@/components/BackLink';
 import Container from '@/components/Container';
 import ModifyBug from '@/components/ModifyBug';
 import ProjectActions from '@/components/ProjectActions';
@@ -34,7 +35,8 @@ const Page = async ({ params }: Props) => {
 
   return (
     <Container className='items-center justify-start'>
-      <Card className='mb-4 mt-6 w-full items-center justify-start bg-white p-4 shadow-md dark:bg-slate-800'>
+      <BackLink projectId={project.id} />
+      <Card className='mb-4 mt-2 w-full items-center justify-start bg-white p-4 shadow-md dark:bg-slate-800'>
         <CardHeader>
           <CardTitle className='flex items-center text-gray-900 dark:text-gray-100'>
             {project.name} <ProjectRename project={project} />

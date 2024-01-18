@@ -2,6 +2,7 @@ import React from 'react';
 
 import { cn, formatDate } from '@/lib/utils';
 
+import BackLink from '@/components/BackLink';
 import BugActions from '@/components/BugActions';
 import Container from '@/components/Container';
 import Notes from '@/components/Notes';
@@ -25,7 +26,8 @@ const Page = async ({ params }: Props) => {
   const bug: BugDetails = await getBug(params.id, params.bugId);
   return (
     <Container className='items-center justify-start'>
-      <Card className='mb-4 mt-6 w-full items-center justify-start bg-white p-4 shadow-md dark:bg-slate-800'>
+      <BackLink projectId={bug.projectId} bugId={bug.id} />
+      <Card className='mb-4 mt-2 w-full items-center justify-start bg-white p-4 shadow-md dark:bg-slate-800'>
         <CardHeader>
           <CardTitle className='flex items-center text-gray-900 dark:text-gray-100'>
             {bug.title}
