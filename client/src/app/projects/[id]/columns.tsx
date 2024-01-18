@@ -92,7 +92,9 @@ export const columns: ColumnDef<Bug>[] = [
     header: 'Updated',
     cell: ({ row }) => {
       const bug = row.original;
-      return `${formatDate(bug.updatedAt)} ~ ${bug.updatedBy?.username}`;
+      return `${formatDate(bug.updatedAt)}${
+        bug.updatedBy ? ' ~' + bug.updatedBy.username : ''
+      }`;
     },
   },
   {
@@ -115,12 +117,18 @@ export const columns: ColumnDef<Bug>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
-              <Link href={`/projects/${bug.projectId}/bugs/${bug.id}`}>
+              <Link
+                className='w-full'
+                href={`/projects/${bug.projectId}/bugs/${bug.id}`}
+              >
                 View
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <button onClick={() => deleteBug(bug.projectId, bug.id)}>
+              <button
+                onClick={() => deleteBug(bug.projectId, bug.id)}
+                className='w-full text-start'
+              >
                 Delete
               </button>
             </DropdownMenuItem>

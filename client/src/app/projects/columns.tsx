@@ -63,10 +63,17 @@ export const columns: ColumnDef<Project>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
-              <Link href={`/projects/${project.id}`}>View</Link>
+              <Link className='w-full' href={`/projects/${project.id}`}>
+                View
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <button onClick={() => deleteProject(project.id)}>Delete</button>
+              <button
+                className='w-full text-start'
+                onClick={() => deleteProject(project.id)}
+              >
+                Delete
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
