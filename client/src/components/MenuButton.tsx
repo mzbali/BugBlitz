@@ -40,11 +40,11 @@ const MenuButton = () => {
         <DropdownMenuTrigger className='focus:outline-none'>
           <Avatar>
             <AvatarFallback className='dark:bg-slate-500 dark:text-gray-300'>
-              {getInitials(data.user?.name || '')}
+              {getInitials(data.user.name || '')}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='w-32 rounded-md bg-white p-2 shadow-lg dark:bg-slate-800 dark:text-white'>
+        <DropdownMenuContent className='w-32 rounded-md bg-white p-1 shadow-lg dark:bg-slate-800 dark:text-white'>
           <DropdownMenuItem className='rounded-md p-2 hover:bg-indigo-300 dark:hover:text-black'>
             <Link href='/'>
               <div className='flex'>
@@ -55,8 +55,11 @@ const MenuButton = () => {
               </div>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className='rounded-md p-2 pb-1 hover:bg-red-300 dark:hover:text-black'>
-            <button onClick={() => signOut()}>
+          <DropdownMenuItem
+            onClick={() => signOut()}
+            className='rounded-md p-2 pb-1 hover:cursor-pointer hover:bg-red-300 dark:hover:text-black'
+          >
+            <button>
               <div className='flex'>
                 <div className='mr-2'>
                   <LogOutIcon />
