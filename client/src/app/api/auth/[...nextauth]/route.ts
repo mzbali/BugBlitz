@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { redirect } from 'next/navigation';
-import NextAuth, { type NextAuthOptions } from 'next-auth';
+import NextAuth, { DefaultSession, type NextAuthOptions } from 'next-auth';
 import { type JWT } from 'next-auth/jwt';
 import { type OAuthConfig } from 'next-auth/providers';
 import KeycloakProvider, {
@@ -19,7 +19,7 @@ declare module 'next-auth' {
     accessToken?: string;
     user: {
       username: string;
-    };
+    } & DefaultSession['user'];
   }
 }
 
@@ -102,6 +102,7 @@ export const authOptions: NextAuthOptions = {
         );
         logOutUrl.searchParams.set('id_token_hint', token.id_token!);
         await fetch(logOutUrl);
+        redirect('/');
       }
     },
   },
