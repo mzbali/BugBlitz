@@ -3,12 +3,12 @@ import { ShieldCheck, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import ModifyBug from '@/components/ModifyBug';
 import Button from '@/components/ui/buttons/Button';
+import UserCheck from '@/components/UserCheck';
 
 import { closeBug, deleteBug, reopenBug } from '@/app/actions';
 import { BugDetails } from '@/models/types';
-
-import ModifyBug from './ModifyBug';
 
 interface Props {
   bug: BugDetails;
@@ -44,9 +44,11 @@ const BugActions: React.FC<Props> = ({ bug }) => {
         {bug.isResolved ? 'Reopen Bug' : 'Close Bug'}
       </Button>
       <ModifyBug bug={bug} projectId={bug.projectId} />
-      <Button leftIcon={Trash} onClick={handleDelete} isLoading={loading}>
-        Delete Bug
-      </Button>
+      <UserCheck user={bug.createdBy}>
+        <Button leftIcon={Trash} onClick={handleDelete} isLoading={loading}>
+          Delete Bug
+        </Button>
+      </UserCheck>
     </>
   );
 };

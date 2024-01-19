@@ -1,14 +1,14 @@
 // Note.tsx
 import { formatDate, getInitials } from '@/lib/utils';
 
+import NoteAction from '@/components/NoteAction';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import UserCheck from '@/components/UserCheck';
 
-import { BugDetails, Note as NoteType } from '@/models/types';
-
-import NoteAction from './NoteAction';
+import { BugDetails, Note } from '@/models/types';
 
 interface Props {
-  note: NoteType;
+  note: Note;
   bug: BugDetails;
 }
 
@@ -33,7 +33,9 @@ const Note = ({ note, bug }: Props) => {
           </div>
         </div>
         <div className='flex space-x-2'>
-          <NoteAction bug={bug} note={note} />
+          <UserCheck user={note.author}>
+            <NoteAction bug={bug} note={note} />
+          </UserCheck>
         </div>
       </div>
       <p className='mt-2 dark:text-white'>{note.body}</p>

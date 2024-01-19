@@ -10,6 +10,8 @@ import { deleteProject } from '@/app/actions';
 import MembersTable from '@/app/projects/[id]/MembersTable';
 import { ProjectDetails } from '@/models/types';
 
+import UserCheck from './UserCheck';
+
 interface Props {
   project: ProjectDetails;
 }
@@ -33,10 +35,12 @@ const ProjectActions: React.FC<Props> = ({ project }) => {
       <Button leftIcon={ChevronUp} variant='outline' onClick={toggleOpen}>
         View Members
       </Button>
-      <MemberAction project={project} />
-      <Button leftIcon={Trash} onClick={handleDelete} isLoading={loading}>
-        Delete Project
-      </Button>
+      <UserCheck user={project.createdBy}>
+        <MemberAction project={project} />
+        <Button leftIcon={Trash} onClick={handleDelete} isLoading={loading}>
+          Delete Project
+        </Button>
+      </UserCheck>
       {isOpen && <MembersTable project={project} />}
     </>
   );
