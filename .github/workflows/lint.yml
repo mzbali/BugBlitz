@@ -1,8 +1,6 @@
-name: Code Check
+name: Code Check for Client
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: {}
   pull_request: {}
 
 concurrency:
@@ -13,6 +11,9 @@ jobs:
   lint:
     name: ⬣ ESLint, ʦ TypeScript, 💅 Prettier, and 🃏 Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
