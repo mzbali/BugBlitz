@@ -2,14 +2,26 @@
 
 import { useSession } from 'next-auth/react';
 
-export default function AuthCheck({ children }: { children: React.ReactNode }) {
+interface AuthCheckProps {
+  children: React.ReactNode;
+  justCheck?: boolean;
+  inverse?: boolean;
+}
+
+export default function AuthCheck({
+  children,
+  justCheck = false,
+  inverse = false,
+}: AuthCheckProps) {
   const { status } = useSession();
 
-  //console.log(session, status);
+  const isAuthenticated = inverse
+    ? status !== 'authenticated'
+    : status === 'authenticated';
 
-  if (status === 'authenticated') {
+  if (isAuthenticated) {
     return <>{children}</>;
   } else {
-    return <p>Not logged in to see this</p>;
+    return justCheck ? <></> : <p>Not logged in to see this</p>;
   }
 }
