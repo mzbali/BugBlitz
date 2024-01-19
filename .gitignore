@@ -24,11 +24,11 @@
 *.sln.iml
 
 # Visual Studio Code
-.vscode/
-!/.vscode/settings.json
-!/.vscode/tasks.json
-!/.vscode/launch.json
-!/.vscode/extensions.json
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # Other
 *.swp
@@ -89,3 +89,6 @@
 !tsconfig.json
 !package.json
 !vercel.json
+
+# Ignore client folder .vscode
+client/.vscode/*
