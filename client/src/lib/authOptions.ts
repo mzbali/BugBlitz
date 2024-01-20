@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.KEYCLOAK_SECRET || 'keycloak_client_secret',
       issuer: process.env.KEYCLOAK_ISSUER || 'keycloak_url',
       httpOptions: {
-        timeout: 10000,
+        timeout: 100000,
       },
     }),
   ],
