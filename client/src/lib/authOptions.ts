@@ -29,6 +29,9 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.KEYCLOAK_ID || 'keycloak_client_id',
       clientSecret: process.env.KEYCLOAK_SECRET || 'keycloak_client_secret',
       issuer: process.env.KEYCLOAK_ISSUER || 'keycloak_url',
+      httpOptions: {
+        timeout: 10000,
+      },
     }),
   ],
   callbacks: {
