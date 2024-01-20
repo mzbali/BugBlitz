@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import React from 'react';
 
+import { authOptions } from '@/lib/authOptions';
 import { formatDate } from '@/lib/utils';
 
 import BackLink from '@/components/BackLink';
@@ -18,7 +19,6 @@ import { DataTable } from '@/components/ui/data-table';
 import { Separator } from '@/components/ui/separator';
 
 import { getProject } from '@/app/actions';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { columns } from '@/app/projects/[id]/columns';
 import { ProjectDetails } from '@/models/types';
 

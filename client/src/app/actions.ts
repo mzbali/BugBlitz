@@ -2,7 +2,8 @@
 import { revalidateTag } from 'next/cache';
 import { getServerSession, Session } from 'next-auth';
 
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
+
 import {
   Bug,
   BugDetails,
