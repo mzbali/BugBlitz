@@ -91,6 +91,9 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async redirect({ url: _, baseUrl }) {
+      return baseUrl;
+    },
   },
   events: {
     async signOut({ token }: { token: JWT }) {
