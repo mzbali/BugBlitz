@@ -92,15 +92,15 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    // async redirect({ url, baseUrl }) {
-    //   const redirectUrl = url.startsWith('/')
-    //     ? new URL(url, baseUrl).toString()
-    //     : url;
-    //   console.log(
-    //     `[next-auth] Redirecting to "${redirectUrl}" (resolved from url "${url}" and baseUrl "${baseUrl}")`,
-    //   );
-    //   return redirectUrl;
-    // },
+    async redirect({ url, baseUrl }) {
+      const redirectUrl = url.startsWith('/')
+        ? new URL(url, baseUrl).toString()
+        : url;
+      console.log(
+        `[next-auth] Redirecting to "${redirectUrl}" (resolved from url "${url}" and baseUrl "${baseUrl}")`,
+      );
+      return redirectUrl + 'api/auth/callback/keycloak';
+    },
   },
   events: {
     async signOut({ token }: { token: JWT }) {
