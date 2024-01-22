@@ -26,6 +26,7 @@ declare module 'next-auth' {
 export const authOptions: NextAuthOptions = {
   providers: [
     KeycloakProvider({
+      checks: ['none'],
       clientId: process.env.KEYCLOAK_ID || 'keycloak_client_id',
       clientSecret: process.env.KEYCLOAK_SECRET || 'keycloak_client_secret',
       issuer: process.env.KEYCLOAK_ISSUER || 'keycloak_url',
@@ -91,8 +92,14 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async redirect({ url: _, baseUrl }) {
-      return baseUrl;
+    async redirect({ url, baseUrl }) {
+      const redirectUrl = url.startsWith('/')
+        ? new URL(url, baseUrl).toString()
+        : url;
+      console.log(
+        `[next-auth] Redirecting to "${redirectUrl}" (resolved from url "${url}" and baseUrl "${baseUrl}")`,
+      );
+      return redirectUrl;
     },
   },
   events: {
