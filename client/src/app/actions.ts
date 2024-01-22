@@ -87,11 +87,16 @@ const fetchWrapper = {
 
 async function handleResponse(response: Response) {
   const text = await response.text();
-  const data = text && JSON.parse(text);
-  if (!response.ok) {
-    throw (data && data.message) || response.statusText;
+  try {
+    const data = text && JSON.parse(text);
+    if (!response.ok) {
+      throw (data && data.message) || response.statusText;
+    }
+    return data;
+  } catch (error) {
+    const message = (error as Error).message;
+    throw new Error(`Failed to parse JSON response: ${message}`);
   }
-  return data;
 }
 
 // Users
