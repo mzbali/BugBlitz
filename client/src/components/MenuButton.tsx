@@ -73,7 +73,7 @@ const MenuButton = () => {
     );
 
   return (
-    <TextButton className='mr-3' onClick={() => signIn()}>
+    <TextButton className='mr-3' onClick={() => signIn('zitadel')}>
       Sign in
     </TextButton>
   );
