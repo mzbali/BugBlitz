@@ -87,25 +87,13 @@ export const authOptions: NextAuthOptions = {
           scope: `openid email profile offline_access`,
         },
       },
-      // async profile(profile) {
-      //   console.log('profile', profile);
-
-      //   return {
-      //     id: profile.sub,
-      //     name: profile.name,
-      //     firstName: profile.given_name,
-      //     lastName: profile.family_name,
-      //     email: profile.email,
-      //     loginName: profile.preferred_username,
-      //     image: profile.picture,
-      //   };
-      // },
     }),
   ],
   callbacks: {
     async jwt({ token, account }) {
       token.accessToken ??= account?.access_token;
       token.refreshToken ??= account?.refresh_token;
+      token.id_token ??= account?.id_token;
       token.expiresAt ??= (account?.expires_at ?? 0) * 1000;
       token.error = undefined;
       token.user ??= await getUserInfo(account?.access_token ?? 'none');
@@ -116,9 +104,7 @@ export const authOptions: NextAuthOptions = {
       // Access token has expired, try to update it
       return refreshAccessToken(token);
     },
-    async session({ session, token: { user, error: tokenError } }) {
-      console.log(user);
-
+    async session({ session, token: { user, error: tokenError, id_token } }) {
       session.user = {
         email: user?.email,
         image: user?.image,
@@ -126,8 +112,9 @@ export const authOptions: NextAuthOptions = {
         username: user?.preferred_username,
       };
       session.clientId = process.env.ZITADEL_CLIENT_ID || '';
+      session.accessToken = id_token;
       session.error = tokenError;
-      console.log(session.user);
+      console.log(session);
 
       return session;
     },
