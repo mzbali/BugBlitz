@@ -1,113 +1,135 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { redirect } from 'next/navigation';
-import { DefaultSession, type NextAuthOptions } from 'next-auth';
+import { DefaultSession, DefaultUser, NextAuthOptions, User } from 'next-auth';
 import { type JWT } from 'next-auth/jwt';
-import { type OAuthConfig } from 'next-auth/providers';
-import KeycloakProvider, {
-  type KeycloakProfile,
-} from 'next-auth/providers/keycloak';
-
-declare module 'next-auth/jwt' {
-  interface JWT {
-    id_token?: string;
-    provider?: string;
-  }
-}
+import ZitadelProvider from 'next-auth/providers/zitadel';
+import { Issuer } from 'openid-client';
 
 declare module 'next-auth' {
   interface Session {
     accessToken?: string;
     user: {
-      username: string;
+      username?: string;
     } & DefaultSession['user'];
+    clientId?: string;
+    error?: string;
+  }
+  interface User extends DefaultUser {
+    preferred_username?: string;
+  }
+}
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id_token?: string;
+    provider?: string;
+    error?: string;
+    user?: User;
+  }
+}
+
+async function refreshAccessToken(token: JWT): Promise<JWT> {
+  try {
+    const issuer = await Issuer.discover(process.env.ZITADEL_ISSUER ?? '');
+    const client = new issuer.Client({
+      client_id: process.env.ZITADEL_CLIENT_ID || '',
+      token_endpoint_auth_method: 'none',
+    });
+
+    const { refresh_token, access_token, expires_at } = await client.refresh(
+      token.refreshToken as string,
+    );
+
+    return {
+      ...token,
+      accessToken: access_token,
+      expiresAt: (expires_at ?? 0) * 1000,
+      refreshToken: refresh_token, // Fall back to old refresh token
+    };
+  } catch (error) {
+    console.error('Error during refreshAccessToken', error);
+
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    };
+  }
+}
+async function getUserInfo(accessToken: string) {
+  try {
+    const response = await fetch(
+      process.env.ZITADEL_ISSUER + '/oidc/v1/userinfo',
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error('Response not OK during getUserInfo');
+    }
+
+    const userInfo = await response.json();
+    return userInfo;
+  } catch (error) {
+    console.error('Error during getUserInfo', error);
+    return null;
   }
 }
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    KeycloakProvider({
-      checks: ['none'],
-      clientId: process.env.KEYCLOAK_ID || 'keycloak_client_id',
-      clientSecret: process.env.KEYCLOAK_SECRET || 'keycloak_client_secret',
-      issuer: process.env.KEYCLOAK_ISSUER || 'keycloak_url',
-      httpOptions: {
-        timeout: 100000,
+    ZitadelProvider({
+      issuer: process.env.ZITADEL_ISSUER || '',
+      clientId: process.env.ZITADEL_CLIENT_ID || '',
+      clientSecret: process.env.ZITADEL_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          scope: `openid email profile offline_access`,
+        },
       },
+      // async profile(profile) {
+      //   console.log('profile', profile);
+
+      //   return {
+      //     id: profile.sub,
+      //     name: profile.name,
+      //     firstName: profile.given_name,
+      //     lastName: profile.family_name,
+      //     email: profile.email,
+      //     loginName: profile.preferred_username,
+      //     image: profile.picture,
+      //   };
+      // },
     }),
   ],
   callbacks: {
     async jwt({ token, account }) {
-      if (account) {
-        token.id_token = account.id_token;
-        token.provider = account.provider;
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
+      token.accessToken ??= account?.access_token;
+      token.refreshToken ??= account?.refresh_token;
+      token.expiresAt ??= (account?.expires_at ?? 0) * 1000;
+      token.error = undefined;
+      token.user ??= await getUserInfo(account?.access_token ?? 'none');
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < (token.expiresAt as number)) {
+        return token;
       }
-      // Check if the token is expired
-      const decodedToken = jwt.decode(
-        token.accessToken as string,
-      ) as JwtPayload;
-      token.username = decodedToken.preferred_username;
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decodedToken.exp && decodedToken.exp < currentTime) {
-        // Token is expired, refresh it
-        const response = await fetch(
-          `${process.env.KEYCLOAK_URL}/realms/myrealm/protocol/openid-connect/token`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              client_id: process.env.KEYCLOAK_ID as string,
-              client_secret: process.env.KEYCLOAK_SECRET as string,
-              grant_type: 'refresh_token' as string,
-              refresh_token: token.refreshToken as string,
-            }),
-          },
-        );
-        if (response.ok) {
-          const refreshedTokens = await response.json();
-          token.accessToken = refreshedTokens.access_token;
-          token.refreshToken = refreshedTokens.refresh_token;
-          console.log('Token refreshed successfully');
-        } else {
-          console.error(`HTTP error! status: ${response.status}`);
-          token.refreshToken = undefined;
-          redirect('/');
-        }
-      }
-      return token;
+      // Access token has expired, try to update it
+      return refreshAccessToken(token);
     },
-    async session({ session, token }) {
-      if (session) {
-        session = Object.assign({}, session, {
-          accessToken: token.accessToken,
-          refreshToken: token.refreshToken,
-          user: {
-            ...session.user,
-            username: token.username,
-          },
-        });
-      }
+    async session({ session, token: { user, error: tokenError } }) {
+      console.log(user);
+
+      session.user = {
+        email: user?.email,
+        image: user?.image,
+        name: user?.name,
+        username: user?.preferred_username,
+      };
+      session.clientId = process.env.ZITADEL_CLIENT_ID || '';
+      session.error = tokenError;
+      console.log(session.user);
+
       return session;
-    },
-  },
-  events: {
-    async signOut({ token }: { token: JWT }) {
-      if (token.provider === 'keycloak') {
-        const issuerUrl = (
-          authOptions.providers.find(
-            (p) => p.id === 'keycloak',
-          ) as OAuthConfig<KeycloakProfile>
-        ).options!.issuer!;
-        const logOutUrl = new URL(
-          `${issuerUrl}/protocol/openid-connect/logout`,
-        );
-        logOutUrl.searchParams.set('id_token_hint', token.id_token!);
-        await fetch(logOutUrl);
-        redirect('/');
-      }
     },
   },
 };
