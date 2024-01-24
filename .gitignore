@@ -40,7 +40,7 @@
 !dotnet-tools.json
 
 # Ignore migation files
-**/Migrations/*.cs
+# **/Migrations/*.cs
 
 # Client gitignore list
 
