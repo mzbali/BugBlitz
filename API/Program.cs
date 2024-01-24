@@ -45,12 +45,12 @@ builder.Services.AddCors();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(x =>
 {
-    x.RequireHttpsMetadata = Convert.ToBoolean(builder.Configuration["Keycloak:RequireHttpsMetadata"]);
-    x.MetadataAddress = builder.Configuration["Keycloak:MetadataAddress"]!;
+    x.RequireHttpsMetadata = Convert.ToBoolean(builder.Configuration["Zitadel:RequireHttpsMetadata"]);
+    x.MetadataAddress = builder.Configuration["Zitadel:MetadataAddress"]!;
     x.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidAudience = builder.Configuration["Keycloak:Audience"],
-        ValidateIssuer = Convert.ToBoolean(builder.Configuration["Keycloak:Validate-Issuer"]),
+        ValidAudience = builder.Configuration["Zitadel:Audience"],
+        ValidateIssuer = Convert.ToBoolean(builder.Configuration["Zitadel:Validate-Issuer"]),
         NameClaimType = "preferred_username"
     };
     x.Events = new JwtBearerEvents
