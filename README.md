@@ -1,11 +1,12 @@
 # BugBlitz
 
 Bug tracking app made with .Net 8 and Next.js and authetication with Zitadel.
-visit [BugBlitz](https://bugblitz.mzbali.com/)
 
 ## Demo
 
-Deployed on Azure VM using Docker Swarm (CapRover) with HTTPS for API & client.
+[Deployed on Azure VM using Docker Swarm (CapRover) with HTTPS for API & client](https://bugblitz.mzbali.com/)
+
+https://www.youtube.com/watch?v=KL3cUSOfrV4
 
 ## Built using
 
