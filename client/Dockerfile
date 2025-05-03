@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy package files and install dependencies with pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN yarn global add pnpm
-RUN NODE_ENV=development pnpm i --frozen-lockfile
+RUN NODE_ENV=development pnpm i --no-frozen-lockfile
 RUN pnpm add sharp
 
 # Stage for Building the Application
@@ -31,7 +31,7 @@ FROM base AS runner
 WORKDIR /app
 
 # Set environment variables for production
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Create system user and group for running the application
