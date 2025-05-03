@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy package files and install dependencies with pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN yarn global add pnpm
-RUN NODE_ENV=development pnpm i --no-frozen-lockfile
+RUN NODE_ENV=development pnpm i --force
 RUN pnpm add sharp
 
 # Stage for Building the Application
