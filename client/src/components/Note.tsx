@@ -5,10 +5,10 @@ import NoteAction from '@/components/NoteAction';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import UserCheck from '@/components/UserCheck';
 
-import { BugDetails, Note } from '@/models/types';
+import { BugDetails, type Note as NoteType } from '@/models/types';
 
 interface Props {
-  note: Note;
+  note: NoteType;
   bug: BugDetails;
 }
 

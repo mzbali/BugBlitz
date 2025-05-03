@@ -17,11 +17,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 import { createNote, updateNote } from '@/app/actions'; // Import updateNote from your actions file
-import { BugDetails, Note } from '@/models/types';
+import { BugDetails, type Note as NoteType } from '@/models/types';
 
 interface Props {
   bug: BugDetails;
-  note?: Note;
+  note?: NoteType;
 }
 
 const ModifyNote = ({ bug, note }: Props) => {
@@ -69,7 +69,7 @@ const ModifyNote = ({ bug, note }: Props) => {
           {note ? 'Edit' : 'Leave a Note'}
         </Button>
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px] dark:border-none dark:bg-slate-700'>
+      <DialogContent className='dark:border-none dark:bg-slate-700 sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle className='dark:text-white'>
             {note ? 'Update Note' : 'Create a Note'}

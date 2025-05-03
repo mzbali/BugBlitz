@@ -5,13 +5,13 @@ import React, { useState } from 'react';
 import Button from '@/components/ui/buttons/Button';
 
 import { deleteNote } from '@/app/actions';
-import { BugDetails, Note } from '@/models/types';
+import { BugDetails, type Note as NoteType } from '@/models/types';
 
 import ModifyNote from './ModifyNote';
 
 interface Props {
   bug: BugDetails;
-  note: Note;
+  note: NoteType;
 }
 
 const NoteAction: React.FC<Props> = ({ bug, note }) => {
