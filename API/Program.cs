@@ -125,7 +125,7 @@ app.UseCors(opt =>
     opt.AllowAnyHeader()
        .AllowAnyMethod()
        .AllowCredentials()
-       .WithOrigins("https://bugblitz-frontend.portfolio.mzbali.com", "http://localhost:3000", "https://identity.portfolio.mzbali.com");
+       .WithOrigins("https://bugblitz.mzbali.co.uk", "http://localhost:3000", "https://identity.portfolio.mzbali.com");
 });
 
 app.UseAuthentication();
