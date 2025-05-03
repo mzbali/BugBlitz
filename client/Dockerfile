@@ -20,11 +20,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Uncomment the following line to disable telemetry during the build
-ENV NEXT_TELEMETRY_DISABLED 1
+# Disable telemetry during the build
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the Next.js application using pnpm
-RUN yarn build
+RUN pnpm build
 
 # Production Stage: Copy files for running the application
 FROM base AS runner
@@ -32,7 +32,7 @@ WORKDIR /app
 
 # Set environment variables for production
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create system user and group for running the application
 RUN addgroup --system --gid 1001 nodejs
@@ -57,7 +57,7 @@ USER nextjs
 EXPOSE 3000
 
 # Set hostname to listen on all available network interfaces
-ENV HOSTNAME 0.0.0.0
+ENV HOSTNAME=0.0.0.0
 
 # Command to run the server
 CMD ["node", "server.js"]
