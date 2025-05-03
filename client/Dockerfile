@@ -16,6 +16,8 @@ RUN pnpm add sharp
 # Stage for Building the Application
 FROM base AS builder
 WORKDIR /app
+RUN yarn global add pnpm
+
 # Copy dependencies from the "deps" stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
